@@ -8,6 +8,7 @@ It should speed up your programming as well as gives your module the ability to 
 ![img.png](pictures/img.png)
 
 Beavers System Interface: Is an interface with some default implementations for common system dependent functionalities.
+
 BSA-X: Beavers System Adapter for System x is an implementation of Beavers System Interface for System X.
 
 The intention is that BSA-X implementations are kept small and simple, while complex algorithm are implemented within
