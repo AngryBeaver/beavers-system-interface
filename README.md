@@ -87,8 +87,8 @@ TODO document Interface.
   I did not know this system, so I searched for a way to allow others to write the system dependent parts for their
   system they know
   without breaking my module.
-- ### Discussion about open gameinng Lisence"
-  With the discussion of wizards of the coast "open gaming lisence", I do no longer want to write a module explicitly
+- ### Discussion about "open gaming Licence"
+  With the discussion of wizards of the coast "open gaming licence", I do no longer want to write a module explicitly
   for dnd
   especially if I can get sued for any or no reasons. So I decided to rewrite my module system agnostic. Then I only
   need to write an implementation of BSI for dnd5e, this implementation does not enable anyone todo anything it just
