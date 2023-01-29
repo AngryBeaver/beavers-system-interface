@@ -298,13 +298,4 @@ export class CoreSystem implements System {
         }
     }
 
-    itemListAddComponentList(itemList: any[], componentList: ComponentData[]): ComponentData[] {
-        if (this._implementation?.itemListAddComponentList !== undefined) {
-            return this._implementation.itemListAddComponentList(itemList, componentList);
-        } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'itemListAddComponentList');
-        }
-    }
-
-
 }
