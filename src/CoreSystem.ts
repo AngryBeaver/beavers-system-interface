@@ -32,7 +32,7 @@ export class CoreSystem implements System {
         return this._implementation.version;
     }
 
-    get configSkills(): SkillConfig[]{
+    get configSkills(): SkillConfig[] {
         if (this._implementation?.configSkills !== undefined) {
             return this._implementation.configSkills;
         } else {
@@ -56,13 +56,14 @@ export class CoreSystem implements System {
         }
     }
 
-    get configCanRollAbility():boolean {
+    get configCanRollAbility(): boolean {
         if (this._implementation?.configCanRollAbility !== undefined) {
             return this._implementation.configCanRollAbility;
         } else {
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configCanRollAbility');
         }
     }
+
     get configLootItemType(): string {
         if (this._implementation?.configLootItemType !== undefined) {
             return this._implementation.configLootItemType;
@@ -71,7 +72,7 @@ export class CoreSystem implements System {
         }
     }
 
-    currencyToLowestValue(currencies: Currencies):number {
+    currencyToLowestValue(currencies: Currencies): number {
         let result = 0;
         this.configCurrencies.forEach(currency => {
             result = result + ((currencies[currency.id] | 0) * currency.factor);
@@ -79,7 +80,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    currencyToCurrencies(lowestValue: number):Currencies {
+    currencyToCurrencies(lowestValue: number): Currencies {
         const sortedSystemCurrencies = this.configCurrencies.sort((a, b) => {
             if (a.factor < b.factor) {
                 return 1;
@@ -97,7 +98,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    actorRollAbility(actor, abilityId: string):Promise<any> {
+    actorRollAbility(actor, abilityId: string): Promise<any> {
         if (this._implementation?.actorRollAbility !== undefined) {
             return this._implementation.actorRollAbility(actor, abilityId);
         } else {
@@ -105,7 +106,7 @@ export class CoreSystem implements System {
         }
     }
 
-    actorRollSkill(actor, skillId: string):Promise<any> {
+    actorRollSkill(actor, skillId: string): Promise<any> {
         if (this._implementation?.actorRollSkill !== undefined) {
             return this._implementation.actorRollSkill(actor, skillId);
         } else {
@@ -113,7 +114,7 @@ export class CoreSystem implements System {
         }
     }
 
-    actorGetCurrencies(actor):Currencies {
+    actorGetCurrencies(actor): Currencies {
         if (this._implementation?.actorGetCurrencies !== undefined) {
             return this._implementation.actorGetCurrencies(actor);
         } else {
@@ -136,7 +137,7 @@ export class CoreSystem implements System {
         return 0 > actorValue + payValue;
     }
 
-    actorSheetAddTab(sheet, html, actor, tabData:{ id: string, label: string, html: string }, tabBody):void {
+    actorSheetAddTab(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody): void {
         if (this._implementation?.actorSheetAddTab !== undefined) {
             return this._implementation.actorSheetAddTab(sheet, html, actor, tabData, tabBody);
         } else {
@@ -199,7 +200,7 @@ export class CoreSystem implements System {
             });
             if (exists) {
                 if (component.quantity < 0) {
-                    return false;
+                    throw new Error("Beavers System Interface | remaining quantity on actor would be less then zero "+ component.name);
                 }
                 if (component.quantity === 0) {
                     itemChange.delete.push(component.id);
@@ -210,13 +211,11 @@ export class CoreSystem implements System {
                 }
             } else {
                 if (component.quantity < 0) {
-                    return false;
+                    throw new Error("Beavers System Interface | remaining quantity on actor would be less then zero "+ component.name);
                 }
                 const entity = await component.getEntity();
                 if (entity === null) {
-                    // @ts-ignore
-                    ui.notifications.error("Beavers System Interface | can not create Item " + component.name + " from " + component.uuid);
-                    return false
+                    throw new Error("Beavers System Interface | can not create Item " + component.name + " from " + component.uuid)
                 }
                 const data = entity.toObject();
                 data[beaversSystemInterface.itemQuantityAttribute] = component.quantity;
@@ -226,7 +225,6 @@ export class CoreSystem implements System {
         await actor.createEmbeddedDocuments("Item", itemChange.create);
         await actor.updateEmbeddedDocuments("Item", itemChange.update);
         await actor.deleteEmbeddedDocuments("Item", itemChange.delete);
-        return true;
     }
 
 
@@ -262,7 +260,15 @@ export class CoreSystem implements System {
         if (this._implementation?.componentDefaultData !== undefined) {
             return this._implementation.componentDefaultData;
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'componentDefaultData');
+            return {
+                id: "invalid",
+                uuid: "invalid",
+                img: "invalid",
+                type: "invalid",
+                name: "invalid",
+                quantity: 1,
+                itemType: undefined,
+            }
         }
     }
 

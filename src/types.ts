@@ -11,11 +11,12 @@ interface SystemApi {
     actorGetCurrencies: (actor) => Currencies;
     actorAddCurrencies: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: JQuery) => void;
-    componentDefaultData: ComponentData,
     componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
     componentFromEntity:(entity)=>Component,
+    componentDefaultData?: ComponentData,
     itemQuantityAttribute:string,
     itemPriceAttribute:string,
+
 }
 
 interface System extends SystemApi {
@@ -26,9 +27,10 @@ interface System extends SystemApi {
     currencyToCurrencies: (lowestValue: number)=>Currencies;
     actorCanAddCurrencies:(actor, currencies: Currencies)=>boolean;
     actorFindComponent:(actor,component: ComponentData)=>Component,
-    actorAddComponentList:(actor,componentList: Component[])=>Promise<boolean>,
+    actorAddComponentList:(actor,componentList: Component[])=>Promise<void>,
     uuidToDocument: (string)=>Promise<foundry.abstract.Document<any, any>>
     componentCreate:(data) => Component
+    componentDefaultData: ComponentData,
 }
 
 /**
