@@ -13,7 +13,11 @@ BSA-X: Beavers System Adapter for System x is an implementation of Beavers Syste
 
 The intention is that BSA-X implementations are kept small and simple, while complex algorithm are implemented within
 BSI,
-
+## Main Functionality v1
+- configurations e.g. list of skills,abilities,currencies
+- adjust Currencies
+- manipulate Items
+- roll on skill,abilities
 ## How to work with this
 ### Setup
 - register your module to BSI
@@ -41,6 +45,7 @@ TODO document Interface.
 
 When you use typescript for your module development,
 you can attach the types for beaversSystemInterface so your IDE can help you with spellings and autocompletion.
+There should be a npm package in the same version as the module.
 
 package.json
 ````json
@@ -77,8 +82,6 @@ export class Dnd5e implements SystemApi {
 ````
 and then implement it ;-)
 Set your version to the major version of the SystemApi you implement.
-
-TODO document Interface.
 
 ## Why this module
 
