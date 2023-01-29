@@ -9,4 +9,5 @@ Hooks.once('init', async function () {
 
 Hooks.on("ready",async function () {
     beaversSystemInterface.checkValidity();
+    Hooks.call("BeaversSystemInterfaceReady");
 });

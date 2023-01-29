@@ -4,22 +4,27 @@ interface SystemApi {
     configSkills: {
         id: string,
         label: string,
+        uuid?: string //system dependent if this is an item
     }[];
     configAbilities: {
         id: string,
         label: string,
+        uuid?: string //system dependent if this is an item
     }[];
     configCurrencies: {
         id: string,
         label: string,
-        factor: number,
-        img?: string,
+        factor: number
+        uuid?: string //system dependent if this is an item
+        [key: string]: unknown; //this is system dependent information! do not relay on it. It is only needed for internal behavior.
     }[];
+    configCanRollAbility: boolean;
+    configLootItemType: string;
     actorRollSkill: (actor, skillId: string) => Promise<any>;
     actorRollAbility: (actor, rollId: string) => Promise<any>;
     actorGetCurrencies: (actor) => Currencies;
-    actorAddCurrencies: (actor, currencies: Currencies) => Promise<boolean>;
-    actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html?: string }, tabBody: JQuery) => void;
+    actorAddCurrencies: (actor, currencies: Currencies) => Promise<boolean>; //may throw Error
+    actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: JQuery) => void;
     componentDefaultData: ComponentData,
     componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
     componentFromEntity:(entity)=>Component,
@@ -59,7 +64,9 @@ interface ComponentData {
     name: string;
     img: string;
     quantity: number;
-    [key: string]: unknown;
+    itemType?: string;      //if it is of type item there is an itemType
+    [key: string]: unknown; //this is system dependent information! do not relay on it. It is only needed for internal behavior e.g. isSame.
+
 }
 
 /**

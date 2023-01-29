@@ -21,7 +21,6 @@ export class CoreSystem implements System {
         if (implementation.id === game["system"].id) {
             implementation.parent = this;
             this._implementation = implementation;
-            Hooks.call("BeaversSystemInterfaceReady");
         }
     }
 
@@ -54,6 +53,21 @@ export class CoreSystem implements System {
             return this._implementation.configCurrencies;
         } else {
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configCurrencies');
+        }
+    }
+
+    get configCanRollAbility():boolean {
+        if (this._implementation?.configCanRollAbility !== undefined) {
+            return this._implementation.configCanRollAbility;
+        } else {
+            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configCanRollAbility');
+        }
+    }
+    get configLootItemType(): string {
+        if (this._implementation?.configLootItemType !== undefined) {
+            return this._implementation.configLootItemType;
+        } else {
+            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configLootItemType');
         }
     }
 
@@ -179,7 +193,7 @@ export class CoreSystem implements System {
                         exists = true;
                     } else {
                         component.quantity = component.quantity + actorItem.quantity;
-                        itemChange.delete.push("-=" + actorItem.id);
+                        itemChange.delete.push(actorItem.id);
                     }
                 }
             });
@@ -188,7 +202,7 @@ export class CoreSystem implements System {
                     return false;
                 }
                 if (component.quantity === 0) {
-                    itemChange.delete.push("-=" + component.id);
+                    itemChange.delete.push(component.id);
                 } else {
                     const update = {_id: component.id};
                     update[beaversSystemInterface.itemQuantityAttribute] = component.quantity;
