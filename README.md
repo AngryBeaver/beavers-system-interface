@@ -89,13 +89,12 @@ Set your version to the major version of the SystemApi you implement.
 - ### Request for another system
   I got requested to make my module available for another system.
   I did not know this system, so I searched for a way to allow others to write the system dependent parts for their
-  system they know
-  without breaking my module.
+  system they know without breaking my module.
 - ### Discussion about "open gaming Licence"
   With the discussion of wizards of the coast "open gaming licence", I do no longer want to write a module explicitly
   for dnd
   especially if I can get sued for any or no reasons. So I decided to rewrite my module system agnostic. Then I only
   need to write an implementation of BSI for dnd5e, this implementation does not enable anyone todo anything it just
-  connects an interface to its implementation.
+  connects an interface to its implementation this can not be sued.
 
 
