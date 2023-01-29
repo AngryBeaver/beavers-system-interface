@@ -37,9 +37,10 @@ Hooks.once("BeaversSystemInterfaceReady", async function () {
 ### Use BeaversSystemInterface
 
 your module can access all "System" interface methods and properties:
+
 [types.ts](https://github.com/AngryBeaver/beavers-system-interface/blob/main/src/types.ts)
 
-TODO document Interface.
+[functions](https://github.com/AngryBeaver/beavers-system-interface/wiki/Beaver's-System-Interface)
 
 ## TypeScript Support
 
