@@ -146,13 +146,12 @@ export class CoreSystem implements System {
                     const actorCurrencyComponent = beaversSystemInterface.actorComponentFind(actor,currency.component);
                     result[currency.id] = actorCurrencyComponent.quantity;
                 }
-
             )
             return result;
         }
     }
 
-    actorCurrenciesAdd(actor, currencies: Currencies): Promise<void> {
+    async actorCurrenciesAdd(actor, currencies: Currencies): Promise<void> {
         if (this._implementation?.actorCurrenciesAdd !== undefined) {
             return this._implementation.actorCurrenciesAdd(actor, currencies);
         } else {
@@ -196,9 +195,6 @@ export class CoreSystem implements System {
             await actor.createEmbeddedDocuments("Item", createItems);
         }
 
-
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorPayCurrencies');
-        }
     }
 
     actorCurrenciesCanAdd(actor, currencies: Currencies): boolean {
