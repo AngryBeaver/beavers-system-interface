@@ -18,9 +18,10 @@ export class CoreSystem implements System {
         this._modules.push(name)
     }
 
-    register(implementation) {
+    async register(implementation) {
         if (implementation.id === game["system"].id) {
             this._implementation = implementation;
+            await beaversSystemInterface.init();
         }
     }
     async init(){
@@ -136,7 +137,18 @@ export class CoreSystem implements System {
         if (this._implementation?.actorCurrenciesGet !== undefined) {
             return this._implementation.actorCurrenciesGet(actor);
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorGetCurrencies');
+            if(this._configCurrencies===undefined){
+                throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorGetCurrencies');
+            }
+            const result:Currencies = {};
+            beaversSystemInterface.configCurrencies.forEach(
+                currency => {
+                    const actorCurrencyComponent = beaversSystemInterface.actorComponentFind(actor,currency.component);
+                    result[currency.id] = actorCurrencyComponent.quantity;
+                }
+
+            )
+            return result;
         }
     }
 
@@ -144,6 +156,47 @@ export class CoreSystem implements System {
         if (this._implementation?.actorCurrenciesAdd !== undefined) {
             return this._implementation.actorCurrenciesAdd(actor, currencies);
         } else {
+            if(this._configCurrencies===undefined){
+                throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorCurrenciesAdd');
+            }
+            const actorCurrencies = beaversSystemInterface.actorCurrenciesGet(actor);
+            const actorValue = beaversSystemInterface.currenciesToLowestValue(actorCurrencies);
+            const addValue = beaversSystemInterface.currenciesToLowestValue(currencies);
+            const result = actorValue+addValue;
+            if (result < 0) {
+                throw new Error("negative money");
+            }
+            const resultCurrencies = beaversSystemInterface.currencyToCurrencies(result);
+            actor = await fromUuid(actor.uuid);
+            const deleteItems:string[] = []
+            const createItems:any[] = [];
+            //delete all previous currency items
+            beaversSystemInterface.configCurrencies.forEach(
+                currency => {
+                    const actorCurrencyComponent = beaversSystemInterface.actorComponentFind(actor,currency.component);
+                    if(actorCurrencyComponent.quantity > 0){
+                        deleteItems.push(actorCurrencyComponent.id);
+                    }
+                }
+            )
+            //add currency
+            for(const [key, value] of Object.entries(resultCurrencies)){
+                const configCurrency = this.configCurrencies.find(c=>c.id === key);
+                if(configCurrency === undefined){
+                    throw new Error("currency" +key+ " not valid");
+                }
+                const item = await beaversSystemInterface.uuidToDocument(configCurrency.uuid);
+                const itemData = item.toObject();
+                itemData[beaversSystemInterface.itemQuantityAttribute] = value;
+                if(itemData[beaversSystemInterface.itemQuantityAttribute] > 0) {
+                    createItems.push(itemData);
+                }
+            }
+            await actor.deleteEmbeddedDocuments("Item", deleteItems);
+            await actor.createEmbeddedDocuments("Item", createItems);
+        }
+
+
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorPayCurrencies');
         }
     }

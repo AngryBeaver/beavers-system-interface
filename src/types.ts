@@ -9,8 +9,8 @@ interface SystemApi {
     configLootItemType: string;
     actorRollSkill: (actor, skillId: string) => Promise<any>;
     actorRollAbility: (actor, abilityId: string) => Promise<any>;
-    actorCurrenciesGet: (actor) => Currencies;
-    actorCurrenciesAdd: (actor, currencies: Currencies) => Promise<void>; //may throw Error
+    actorCurrenciesGet?: (actor) => Currencies;
+    actorCurrenciesAdd?: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: string) => void;
     componentIsSame?:(a: ComponentData,b: ComponentData)=>boolean,
     componentFromEntity?:(entity)=>Component,
@@ -24,9 +24,11 @@ interface System extends SystemApi {
     init?:()=>Promise<void>;
     checkValidity:()=>void;
     addModule:(name:string)=>void;
-    register:(implementation:SystemApi)=>void;
+    register:(implementation:SystemApi)=>Promise<void>;
     currenciesToLowestValue: (currencies: Currencies)=>number;
     currencyToCurrencies: (lowestValue: number)=>Currencies;
+    actorCurrenciesGet: (actor) => Currencies;
+    actorCurrenciesAdd: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorCurrenciesCanAdd:(actor, currencies: Currencies)=>boolean;
     actorComponentFind:(actor,component: ComponentData)=>Component,
     actorComponentListAdd:(actor,componentList: Component[])=>Promise<void>,
