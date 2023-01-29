@@ -2,7 +2,7 @@
     "title": "Beaver's System Interface",
     "description": "An Interface to uniformly access system dependent implementations",
     "id": "beavers-system-interface",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "authors": [
       {
         "name": "angryBeaver",

@@ -1,6 +1,7 @@
 interface SystemApi {
     version: number;
     id: string;
+    init?:()=>Promise<void>;
     configSkills: SkillConfig[];
     configAbilities: AbilityConfig[];
     configCurrencies: CurrencyConfig[];
@@ -8,11 +9,11 @@ interface SystemApi {
     configLootItemType: string;
     actorRollSkill: (actor, skillId: string) => Promise<any>;
     actorRollAbility: (actor, abilityId: string) => Promise<any>;
-    actorGetCurrencies: (actor) => Currencies;
-    actorAddCurrencies: (actor, currencies: Currencies) => Promise<void>; //may throw Error
-    actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: JQuery) => void;
-    componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
-    componentFromEntity:(entity)=>Component,
+    actorCurrenciesGet: (actor) => Currencies;
+    actorCurrenciesAdd: (actor, currencies: Currencies) => Promise<void>; //may throw Error
+    actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: string) => void;
+    componentIsSame?:(a: ComponentData,b: ComponentData)=>boolean,
+    componentFromEntity?:(entity)=>Component,
     componentDefaultData?: ComponentData,
     itemQuantityAttribute:string,
     itemPriceAttribute:string,
@@ -20,17 +21,20 @@ interface SystemApi {
 }
 
 interface System extends SystemApi {
+    init?:()=>Promise<void>;
     checkValidity:()=>void;
     addModule:(name:string)=>void;
     register:(implementation:SystemApi)=>void;
-    currencyToLowestValue: (currencies: Currencies)=>number;
+    currenciesToLowestValue: (currencies: Currencies)=>number;
     currencyToCurrencies: (lowestValue: number)=>Currencies;
-    actorCanAddCurrencies:(actor, currencies: Currencies)=>boolean;
-    actorFindComponent:(actor,component: ComponentData)=>Component,
-    actorAddComponentList:(actor,componentList: Component[])=>Promise<void>,
+    actorCurrenciesCanAdd:(actor, currencies: Currencies)=>boolean;
+    actorComponentFind:(actor,component: ComponentData)=>Component,
+    actorComponentListAdd:(actor,componentList: Component[])=>Promise<void>,
     uuidToDocument: (string)=>Promise<foundry.abstract.Document<any, any>>
     componentCreate:(data) => Component
     componentDefaultData: ComponentData,
+    componentFromEntity:(entity)=>Component,
+    componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
 }
 
 /**
@@ -78,5 +82,5 @@ interface CurrencyConfig {
     label: string,
     factor: number, //factor how often the lowest currency fits into this currency
     uuid?: string, //system dependent if this is an item
-    [key: string]: unknown; //this is system dependent information! do not rely on it. It maybe used for internal behavior.
+    component?: Component //will get automatically attached when an uuid is given
 }

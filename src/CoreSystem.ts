@@ -3,6 +3,7 @@ import {NAMESPACE} from "./main.js";
 export class CoreSystem implements System {
     _implementation: SystemApi;
     _modules: string[] = [];
+    _configCurrencies:CurrencyConfig[];
 
     checkValidity() {
         if (this._modules.length > 0 && this._implementation === undefined) {
@@ -19,9 +20,23 @@ export class CoreSystem implements System {
 
     register(implementation) {
         if (implementation.id === game["system"].id) {
-            implementation.parent = this;
             this._implementation = implementation;
         }
+    }
+    async init(){
+        if (this._implementation?.init !== undefined) {
+            await this._implementation.init();
+        }
+        const configCurrencies = beaversSystemInterface.configCurrencies;
+        for(const currency of configCurrencies){
+            if(currency.uuid != undefined){
+                const currencyItem = await beaversSystemInterface.uuidToDocument();
+                configCurrencies.component = beaversSystemInterface.componentFromEntity(currencyItem);
+            }else{
+                return;
+            }
+        }
+        this._configCurrencies = configCurrencies;
     }
 
     get id(): string {
@@ -49,6 +64,9 @@ export class CoreSystem implements System {
     }
 
     get configCurrencies(): CurrencyConfig[] {
+        if(this._configCurrencies){
+            return this._configCurrencies;
+        }
         if (this._implementation?.configCurrencies !== undefined) {
             return this._implementation.configCurrencies;
         } else {
@@ -72,7 +90,7 @@ export class CoreSystem implements System {
         }
     }
 
-    currencyToLowestValue(currencies: Currencies): number {
+    currenciesToLowestValue(currencies: Currencies): number {
         let result = 0;
         this.configCurrencies.forEach(currency => {
             result = result + ((currencies[currency.id] | 0) * currency.factor);
@@ -114,30 +132,30 @@ export class CoreSystem implements System {
         }
     }
 
-    actorGetCurrencies(actor): Currencies {
-        if (this._implementation?.actorGetCurrencies !== undefined) {
-            return this._implementation.actorGetCurrencies(actor);
+    actorCurrenciesGet(actor): Currencies {
+        if (this._implementation?.actorCurrenciesGet !== undefined) {
+            return this._implementation.actorCurrenciesGet(actor);
         } else {
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorGetCurrencies');
         }
     }
 
-    actorAddCurrencies(actor, currencies: Currencies): Promise<void> {
-        if (this._implementation?.actorAddCurrencies !== undefined) {
-            return this._implementation.actorAddCurrencies(actor, currencies);
+    actorCurrenciesAdd(actor, currencies: Currencies): Promise<void> {
+        if (this._implementation?.actorCurrenciesAdd !== undefined) {
+            return this._implementation.actorCurrenciesAdd(actor, currencies);
         } else {
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorPayCurrencies');
         }
     }
 
-    actorCanAddCurrencies(actor, currencies: Currencies): boolean {
-        const actorCurrencies = this.actorGetCurrencies(actor);
-        const payValue = this.currencyToLowestValue(currencies);
-        const actorValue = this.currencyToLowestValue(actorCurrencies);
+    actorCurrenciesCanAdd(actor, currencies: Currencies): boolean {
+        const actorCurrencies = this.actorCurrenciesGet(actor);
+        const payValue = this.currenciesToLowestValue(currencies);
+        const actorValue = this.currenciesToLowestValue(actorCurrencies);
         return 0 > actorValue + payValue;
     }
 
-    actorSheetAddTab(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody): void {
+    actorSheetAddTab(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody:string): void {
         if (this._implementation?.actorSheetAddTab !== undefined) {
             return this._implementation.actorSheetAddTab(sheet, html, actor, tabData, tabBody);
         } else {
@@ -145,7 +163,7 @@ export class CoreSystem implements System {
         }
     }
 
-    actorFindComponent(actor, component: ComponentData): Component {
+    actorComponentFind(actor, component: ComponentData): Component {
         const result = beaversSystemInterface.componentCreate(component);
         result.quantity = 0;
         actor.items.forEach((i) => {
@@ -157,7 +175,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    async actorAddComponentList(actor, componentList: Component[]): Promise<boolean> {
+    async actorComponentListAdd(actor, componentList: Component[]): Promise<void> {
         //unique Components
         const uniqueComponents: Component[] = [];
         componentList.forEach(component => {
@@ -276,7 +294,10 @@ export class CoreSystem implements System {
         if (this._implementation?.componentIsSame !== undefined) {
             return this._implementation.componentIsSame(a, b);
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'componentIsSame');
+            const isSameName = a.name === b.name;
+            const isSameType = a.type === b.type;
+            const isSameItemType = a.itemType === b.itemType;
+            return isSameName && isSameType && isSameItemType;
         }
     }
 
@@ -284,7 +305,16 @@ export class CoreSystem implements System {
         if (this._implementation?.componentFromEntity !== undefined) {
             return this._implementation.componentFromEntity(entity);
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'componentFromEntity');
+            const data = {
+                id: entity.id,
+                uuid: entity.uuid,
+                img: entity.img,
+                name: entity.name,
+                type : entity.documentName,
+                quantity: entity[beaversSystemInterface.itemQuantityAttribute] || 1,
+                itemType: entity.documentName === "Item" ? entity.type : undefined,
+            }
+            return beaversSystemInterface.componentCreate(data);
         }
     }
 
