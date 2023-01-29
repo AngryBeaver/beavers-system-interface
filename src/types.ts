@@ -1,36 +1,21 @@
 interface SystemApi {
     version: number;
     id: string;
-    configSkills: {
-        id: string,
-        label: string,
-        uuid?: string //system dependent if this is an item
-    }[];
-    configAbilities: {
-        id: string,
-        label: string,
-        uuid?: string //system dependent if this is an item
-    }[];
-    configCurrencies: {
-        id: string,
-        label: string,
-        factor: number
-        uuid?: string //system dependent if this is an item
-        [key: string]: unknown; //this is system dependent information! do not relay on it. It is only needed for internal behavior.
-    }[];
+    configSkills: SkillConfig[];
+    configAbilities: AbilityConfig[];
+    configCurrencies: CurrencyConfig[];
     configCanRollAbility: boolean;
     configLootItemType: string;
     actorRollSkill: (actor, skillId: string) => Promise<any>;
-    actorRollAbility: (actor, rollId: string) => Promise<any>;
+    actorRollAbility: (actor, abilityId: string) => Promise<any>;
     actorGetCurrencies: (actor) => Currencies;
-    actorAddCurrencies: (actor, currencies: Currencies) => Promise<boolean>; //may throw Error
+    actorAddCurrencies: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: JQuery) => void;
     componentDefaultData: ComponentData,
     componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
     componentFromEntity:(entity)=>Component,
     itemQuantityAttribute:string,
     itemPriceAttribute:string,
-    itemListAddComponentList:(itemList:any[],componentList:ComponentData[])=>ComponentData[],
 }
 
 interface System extends SystemApi {
@@ -74,4 +59,22 @@ interface ComponentData {
  */
 interface Currencies {
     [id: string]: number
+}
+
+interface SkillConfig {
+    id: string,
+    label: string,
+    uuid?: string //system dependent if this is an item
+}
+interface AbilityConfig {
+    id: string,
+    label: string,
+    uuid?: string //system dependent if this is an item
+}
+interface CurrencyConfig {
+    id: string,
+    label: string,
+    factor: number, //factor how often the lowest currency fits into this currency
+    uuid?: string, //system dependent if this is an item
+    [key: string]: unknown; //this is system dependent information! do not rely on it. It maybe used for internal behavior.
 }

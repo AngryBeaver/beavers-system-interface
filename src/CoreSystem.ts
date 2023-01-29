@@ -32,7 +32,7 @@ export class CoreSystem implements System {
         return this._implementation.version;
     }
 
-    get configSkills() {
+    get configSkills(): SkillConfig[]{
         if (this._implementation?.configSkills !== undefined) {
             return this._implementation.configSkills;
         } else {
@@ -40,7 +40,7 @@ export class CoreSystem implements System {
         }
     }
 
-    get configAbilities() {
+    get configAbilities(): AbilityConfig[] {
         if (this._implementation?.configAbilities !== undefined) {
             return this._implementation.configAbilities;
         } else {
@@ -48,7 +48,7 @@ export class CoreSystem implements System {
         }
     }
 
-    get configCurrencies() {
+    get configCurrencies(): CurrencyConfig[] {
         if (this._implementation?.configCurrencies !== undefined) {
             return this._implementation.configCurrencies;
         } else {
@@ -71,7 +71,7 @@ export class CoreSystem implements System {
         }
     }
 
-    currencyToLowestValue(currencies: Currencies) {
+    currencyToLowestValue(currencies: Currencies):number {
         let result = 0;
         this.configCurrencies.forEach(currency => {
             result = result + ((currencies[currency.id] | 0) * currency.factor);
@@ -79,7 +79,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    currencyToCurrencies(lowestValue: number) {
+    currencyToCurrencies(lowestValue: number):Currencies {
         const sortedSystemCurrencies = this.configCurrencies.sort((a, b) => {
             if (a.factor < b.factor) {
                 return 1;
@@ -97,7 +97,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    actorRollAbility(actor, abilityId: string) {
+    actorRollAbility(actor, abilityId: string):Promise<any> {
         if (this._implementation?.actorRollAbility !== undefined) {
             return this._implementation.actorRollAbility(actor, abilityId);
         } else {
@@ -105,7 +105,7 @@ export class CoreSystem implements System {
         }
     }
 
-    actorRollSkill(actor, skillId: string) {
+    actorRollSkill(actor, skillId: string):Promise<any> {
         if (this._implementation?.actorRollSkill !== undefined) {
             return this._implementation.actorRollSkill(actor, skillId);
         } else {
@@ -113,7 +113,7 @@ export class CoreSystem implements System {
         }
     }
 
-    actorGetCurrencies(actor) {
+    actorGetCurrencies(actor):Currencies {
         if (this._implementation?.actorGetCurrencies !== undefined) {
             return this._implementation.actorGetCurrencies(actor);
         } else {
@@ -121,7 +121,7 @@ export class CoreSystem implements System {
         }
     }
 
-    actorAddCurrencies(actor, currencies: Currencies) {
+    actorAddCurrencies(actor, currencies: Currencies): Promise<void> {
         if (this._implementation?.actorAddCurrencies !== undefined) {
             return this._implementation.actorAddCurrencies(actor, currencies);
         } else {
@@ -129,14 +129,14 @@ export class CoreSystem implements System {
         }
     }
 
-    actorCanAddCurrencies(actor, currencies: Currencies) {
+    actorCanAddCurrencies(actor, currencies: Currencies): boolean {
         const actorCurrencies = this.actorGetCurrencies(actor);
         const payValue = this.currencyToLowestValue(currencies);
         const actorValue = this.currencyToLowestValue(actorCurrencies);
         return 0 > actorValue + payValue;
     }
 
-    actorSheetAddTab(sheet, html, actor, tabData, tabBody) {
+    actorSheetAddTab(sheet, html, actor, tabData:{ id: string, label: string, html: string }, tabBody):void {
         if (this._implementation?.actorSheetAddTab !== undefined) {
             return this._implementation.actorSheetAddTab(sheet, html, actor, tabData, tabBody);
         } else {
