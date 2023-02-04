@@ -28,14 +28,14 @@ BSI,
 - register your module to BSI
 
 ````javascript
-Hooks.on("BeaversSystemInterfaceLoaded", async function () {
+Hooks.on("beavers-system-interface.init", async function () {
     beaversSystemInterface.addModule("beavers-crafting");
 });
 ````
 - enable your module only when a BSA implementation for the current system is found
 
 ````javascript
-Hooks.once("BeaversSystemInterfaceReady", async function () {
+Hooks.once("beavers-system-interface.ready", async function () {
 
 }
 ````
@@ -75,7 +75,7 @@ tsconfig.json
 ### Setup
 - register your BSA-X to BSI
 ````javascript
-Hooks.on("BeaversSystemInterfaceLoaded", async function(){
+Hooks.on("beavers-system-interface.init", async function(){
   beaversSystemInterface.register(new Dnd5e());
 });
 ````
