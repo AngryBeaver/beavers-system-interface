@@ -2,7 +2,7 @@
     "title": "Beaver's System Interface",
     "description": "An Interface to uniformly access system dependent implementations",
     "id": "beavers-system-interface",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "authors": [
       {
         "name": "angryBeaver",
@@ -10,6 +10,11 @@
       }
     ],
     "languages": [
+      {
+        "lang": "en",
+        "name": "English",
+        "path": "lang/en.json"
+      }
     ],
     "esmodules": [
       "src/main.js"

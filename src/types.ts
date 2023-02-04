@@ -24,19 +24,21 @@ interface System extends SystemApi {
     init?:()=>Promise<void>;
     checkValidity:()=>void;
     addModule:(name:string)=>void;
-    register:(implementation:SystemApi)=>Promise<void>;
+    register:(implementation:SystemApi)=>void;
     currenciesToLowestValue: (currencies: Currencies)=>number;
     currencyToCurrencies: (lowestValue: number)=>Currencies;
     actorCurrenciesGet: (actor) => Currencies;
     actorCurrenciesAdd: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorCurrenciesCanAdd:(actor, currencies: Currencies)=>boolean;
-    actorComponentFind:(actor,component: ComponentData)=>Component,
     actorComponentListAdd:(actor,componentList: Component[])=>Promise<void>,
     uuidToDocument: (string)=>Promise<foundry.abstract.Document<any, any>>
     componentCreate:(data) => Component
     componentDefaultData: ComponentData,
     componentFromEntity:(entity)=>Component,
     componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
+    objectAttributeGet:(obj:any, attribute:string)=>any,
+    objectAttributeSet:(obj:any, attribute:string, value)=>void,
+    itemListComponentFind:(itemList,component: ComponentData)=>{components:Component[],quantity:number},
 }
 
 /**

@@ -3,7 +3,7 @@ This module is for developers only. It helps to write system agnostic foundry vt
 
 Beaver's System Interface is an interface for often used system dependent functionalities.
 When you write your module you just call the methods of this interface instead of writing system dependend code.
-It should speed up your programming as well as gives your module the ability to work instantly for multiple Systems.
+It should speed up your development as well as gives your module the ability to work instantly for multiple Systems.
 
 ![img.png](pictures/img.png)
 
@@ -53,7 +53,7 @@ package.json
 {
   ...
   "devDependencies": {
-    "beavers-system-interface": "^1.0.1"
+    "beavers-system-interface": "^1.0.5"
   }
 }
 ````
@@ -81,7 +81,11 @@ export class Dnd5e implements SystemApi {
   
 }
 ````
-and then implement it ;-)
+and then implement it [SystemApi](https://github.com/AngryBeaver/beavers-system-interface/blob/main/src/types.ts)
+
+some methods have a default implementation see
+[functions](https://github.com/AngryBeaver/beavers-system-interface/wiki/Beaver's-System-Interface)
+
 Set your version to the major version of the SystemApi you implement.
 
 ## Why this module

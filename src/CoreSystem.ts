@@ -8,7 +8,7 @@ export class CoreSystem implements System {
     checkValidity() {
         if (this._modules.length > 0 && this._implementation === undefined) {
             // @ts-ignore
-            ui.notifications.error("Beavers System Interface | " + game.system.id + " implementation for beavers system interface is missing");
+            ui.notifications.error("Beavers System Interface | missing module BSA - " + game.system.id + " <a href='https://github.com/AngryBeaver/beavers-system-interface/wiki/BSA-x-links'>module links</a>",{permanent:true});
             console.error("The following modules will not work", this._modules);
             throw Error(game['i18n'].localize("beaversSystemInterface.SystemNotFound"));
         }
@@ -18,10 +18,9 @@ export class CoreSystem implements System {
         this._modules.push(name)
     }
 
-    async register(implementation) {
+    register(implementation) {
         if (implementation.id === game["system"].id) {
             this._implementation = implementation;
-            await beaversSystemInterface.init();
         }
     }
     async init(){
@@ -31,8 +30,8 @@ export class CoreSystem implements System {
         const configCurrencies = beaversSystemInterface.configCurrencies;
         for(const currency of configCurrencies){
             if(currency.uuid != undefined){
-                const currencyItem = await beaversSystemInterface.uuidToDocument();
-                configCurrencies.component = beaversSystemInterface.componentFromEntity(currencyItem);
+                const currencyItem = await beaversSystemInterface.uuidToDocument(currency.uuid);
+                currency.component = beaversSystemInterface.componentFromEntity(currencyItem);
             }else{
                 return;
             }
@@ -140,15 +139,19 @@ export class CoreSystem implements System {
             if(this._configCurrencies===undefined){
                 throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorGetCurrencies');
             }
-            const result:Currencies = {};
-            beaversSystemInterface.configCurrencies.forEach(
-                currency => {
-                    const actorCurrencyComponent = beaversSystemInterface.actorComponentFind(actor,currency.component);
-                    result[currency.id] = actorCurrencyComponent.quantity;
-                }
-            )
-            return result;
+            return this._actorCurrenciesGet(actor);
         }
+    }
+
+    _actorCurrenciesGet(actor): Currencies {
+        const result:Currencies = {};
+        beaversSystemInterface.configCurrencies.forEach(
+            currency => {
+                const actorFindings = beaversSystemInterface.actorComponentFind(actor,currency.component);
+                result[currency.id] = actorFindings.quantity;
+            }
+        )
+        return result;
     }
 
     async actorCurrenciesAdd(actor, currencies: Currencies): Promise<void> {
@@ -158,43 +161,46 @@ export class CoreSystem implements System {
             if(this._configCurrencies===undefined){
                 throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorCurrenciesAdd');
             }
-            const actorCurrencies = beaversSystemInterface.actorCurrenciesGet(actor);
-            const actorValue = beaversSystemInterface.currenciesToLowestValue(actorCurrencies);
-            const addValue = beaversSystemInterface.currenciesToLowestValue(currencies);
-            const result = actorValue+addValue;
-            if (result < 0) {
-                throw new Error("negative money");
-            }
-            const resultCurrencies = beaversSystemInterface.currencyToCurrencies(result);
-            actor = await fromUuid(actor.uuid);
-            const deleteItems:string[] = []
-            const createItems:any[] = [];
-            //delete all previous currency items
-            beaversSystemInterface.configCurrencies.forEach(
-                currency => {
-                    const actorCurrencyComponent = beaversSystemInterface.actorComponentFind(actor,currency.component);
-                    if(actorCurrencyComponent.quantity > 0){
-                        deleteItems.push(actorCurrencyComponent.id);
-                    }
-                }
-            )
-            //add currency
-            for(const [key, value] of Object.entries(resultCurrencies)){
-                const configCurrency = this.configCurrencies.find(c=>c.id === key);
-                if(configCurrency === undefined){
-                    throw new Error("currency" +key+ " not valid");
-                }
-                const item = await beaversSystemInterface.uuidToDocument(configCurrency.uuid);
-                const itemData = item.toObject();
-                itemData[beaversSystemInterface.itemQuantityAttribute] = value;
-                if(itemData[beaversSystemInterface.itemQuantityAttribute] > 0) {
-                    createItems.push(itemData);
-                }
-            }
-            await actor.deleteEmbeddedDocuments("Item", deleteItems);
-            await actor.createEmbeddedDocuments("Item", createItems);
+            await this._actorCurrenciesAdd(actor, currencies);
         }
+    }
 
+    async _actorCurrenciesAdd(actor, currencies: Currencies): Promise<void>{
+        const actorCurrencies = beaversSystemInterface.actorCurrenciesGet(actor);
+        const actorValue = beaversSystemInterface.currenciesToLowestValue(actorCurrencies);
+        const addValue = beaversSystemInterface.currenciesToLowestValue(currencies);
+        const result = actorValue+addValue;
+        if (result < 0) {
+            throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
+        }
+        const resultCurrencies = beaversSystemInterface.currencyToCurrencies(result);
+        actor = await fromUuid(actor.uuid);
+        const deleteItems:string[] = []
+        const createItems:any[] = [];
+        //delete all previous currency items
+        beaversSystemInterface.configCurrencies.forEach(
+            currency => {
+                const actorFindings = beaversSystemInterface.actorComponentFind(actor,currency.component);
+                if(actorFindings.quantity > 0){
+                    deleteItems.push(...actorFindings.components.map(c=>c.id));
+                }
+            }
+        )
+        //add currency
+        for(const [key, value] of Object.entries(resultCurrencies)){
+            const configCurrency = this.configCurrencies.find(c=>c.id === key);
+            if(configCurrency === undefined){
+                throw new Error("currency" +key+ " not valid");
+            }
+            const item = await beaversSystemInterface.uuidToDocument(configCurrency.uuid);
+            const itemData = item.toObject();
+            this.objectAttributeSet(itemData,beaversSystemInterface.itemQuantityAttribute,value);
+            if(value as number > 0) {
+                createItems.push(itemData);
+            }
+        }
+        await actor.deleteEmbeddedDocuments("Item", deleteItems);
+        await actor.createEmbeddedDocuments("Item", createItems);
     }
 
     actorCurrenciesCanAdd(actor, currencies: Currencies): boolean {
@@ -212,12 +218,15 @@ export class CoreSystem implements System {
         }
     }
 
-    actorComponentFind(actor, component: ComponentData): Component {
-        const result = beaversSystemInterface.componentCreate(component);
-        result.quantity = 0;
-        actor.items.forEach((i) => {
+    itemListComponentFind(itemList,component: ComponentData):{components:Component[],quantity:number} {
+        const result = {
+            quantity:0,
+            components:[] as Component[]
+        }
+        itemList.forEach((i) => {
             const componentItem = beaversSystemInterface.componentFromEntity(i);
             if (componentItem.isSame(component)) {
+                result.components.push(componentItem);
                 result.quantity = result.quantity + componentItem.quantity;
             }
         });
@@ -251,42 +260,28 @@ export class CoreSystem implements System {
             delete: []
         }
         for (const component of uniqueComponents) {
-            let exists = false;
-            actor.items.forEach((i) => {
-                const actorItem = beaversSystemInterface.componentFromEntity(i);
-                if (actorItem.isSame(component)) {
-                    if (!exists) {
-                        component.id = actorItem.id;
-                        component.quantity = component.quantity + actorItem.quantity;
-                        exists = true;
-                    } else {
-                        component.quantity = component.quantity + actorItem.quantity;
-                        itemChange.delete.push(actorItem.id);
-                    }
-                }
-            });
-            if (exists) {
+            const actorFindings = beaversSystemInterface.actorComponentFind(actor,component);
+            if(actorFindings.quantity != 0){
+                component.quantity = component.quantity + actorFindings.quantity;
                 if (component.quantity < 0) {
-                    throw new Error("Beavers System Interface | remaining quantity on actor would be less then zero "+ component.name);
+                    throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
                 }
-                if (component.quantity === 0) {
-                    itemChange.delete.push(component.id);
-                } else {
-                    const update = {_id: component.id};
-                    update[beaversSystemInterface.itemQuantityAttribute] = component.quantity;
+                if (component.quantity > 0) {
+                    const update = {_id: actorFindings.components.shift().id};
+                    this.objectAttributeSet(update,beaversSystemInterface.itemQuantityAttribute,component.quantity);
                     itemChange.update.push(update);
                 }
+                itemChange.delete.push(...actorFindings.components.map(c=>c.id));
             } else {
                 if (component.quantity < 0) {
-                    throw new Error("Beavers System Interface | remaining quantity on actor would be less then zero "+ component.name);
+                    throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
                 }
-                const entity = await component.getEntity();
-                if (entity === null) {
-                    throw new Error("Beavers System Interface | can not create Item " + component.name + " from " + component.uuid)
+                if(component.quantity !=0) {
+                    const entity = await component.getEntity();
+                    const data = entity.toObject();
+                    this.objectAttributeSet(data, beaversSystemInterface.itemQuantityAttribute, component.quantity);
+                    itemChange.create.push(data)
                 }
-                const data = entity.toObject();
-                data[beaversSystemInterface.itemQuantityAttribute] = component.quantity;
-                itemChange.create.push(data)
             }
         }
         await actor.createEmbeddedDocuments("Item", itemChange.create);
@@ -307,7 +302,7 @@ export class CoreSystem implements System {
             result = await fromUuid(uuid);
         }
         if (result === null) {
-            throw new Error("document not found");
+            throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.DocumentNotFound")+ uuid);
         }
         return result;
     }
@@ -360,7 +355,7 @@ export class CoreSystem implements System {
                 img: entity.img,
                 name: entity.name,
                 type : entity.documentName,
-                quantity: entity[beaversSystemInterface.itemQuantityAttribute] || 1,
+                quantity: this.objectAttributeGet(entity,beaversSystemInterface.itemQuantityAttribute) || 1,
                 itemType: entity.documentName === "Item" ? entity.type : undefined,
             }
             return beaversSystemInterface.componentCreate(data);
@@ -380,6 +375,32 @@ export class CoreSystem implements System {
             return this._implementation.itemQuantityAttribute;
         } else {
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'itemQuantityAttribute');
+        }
+    }
+
+    objectAttributeGet(obj:any, attribute:string):any {
+        const arr:string[] = attribute.split(".");
+        while(arr.length){
+            const prop = arr.shift();
+            if(prop != undefined && prop != ""){
+                obj = obj[prop]
+            }
+        };
+        return obj;
+    }
+    objectAttributeSet(obj:any, attribute:string, value):void {
+        const arr:string[] = attribute.split(".");
+        while(arr.length){
+            const prop = arr.shift();
+            if(prop != undefined && prop != ""){
+                if(obj[prop] == undefined){
+                    obj[prop]={}
+                }
+                if(arr.length === 0){
+                    obj[prop]=value;
+                }
+                obj = obj[prop];
+            }
         }
     }
 

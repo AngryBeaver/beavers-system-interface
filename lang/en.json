@@ -1,6 +1,10 @@
 {
   "beaversSystemInterface": {
     "SystemNotFound": "Could not find an implementation for that system. Maybe you missed to install the correct beavers system implementation module",
-    "MethodNotSupported": "Your system does not yet support method: "
+    "MethodNotSupported": "Your system does not yet support method: ",
+    "RemainingQuantityLessThenZero": "not enough ",
+    "NotEnoughMoney": "not enough money",
+    "DocumentNotFound": "document not found for :"
+
   }
 }
