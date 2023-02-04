@@ -10,7 +10,7 @@ Beaver's System Interface is an interface for often used system dependent functi
 When you write your module you just call the methods of this interface instead of writing system dependend code.
 It should speed up your development as well as gives your module the ability to work instantly for multiple Systems.
 
-![img.png](pictures/img.png)
+![img.png](https://github.com/AngryBeaver/beavers-system-interface/blob/main/pictures/img.png)
 
 Beavers System Interface: Is an interface with some default implementations for common system dependent functionalities.
 
@@ -58,7 +58,7 @@ package.json
 {
   ...
   "devDependencies": {
-    "beavers-system-interface": "^1.0.5"
+    "beavers-system-interface": "^1.0.6"
   }
 }
 ````

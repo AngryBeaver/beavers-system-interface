@@ -147,7 +147,7 @@ export class CoreSystem implements System {
         const result:Currencies = {};
         beaversSystemInterface.configCurrencies.forEach(
             currency => {
-                const actorFindings = beaversSystemInterface.actorComponentFind(actor,currency.component);
+                const actorFindings = beaversSystemInterface.itemListComponentFind(actor.items,currency.component);
                 result[currency.id] = actorFindings.quantity;
             }
         )
@@ -180,7 +180,7 @@ export class CoreSystem implements System {
         //delete all previous currency items
         beaversSystemInterface.configCurrencies.forEach(
             currency => {
-                const actorFindings = beaversSystemInterface.actorComponentFind(actor,currency.component);
+                const actorFindings = beaversSystemInterface.itemListComponentFind(actor.items,currency.component);
                 if(actorFindings.quantity > 0){
                     deleteItems.push(...actorFindings.components.map(c=>c.id));
                 }
@@ -260,7 +260,7 @@ export class CoreSystem implements System {
             delete: []
         }
         for (const component of uniqueComponents) {
-            const actorFindings = beaversSystemInterface.actorComponentFind(actor,component);
+            const actorFindings = beaversSystemInterface.itemListComponentFind(actor.items,component);
             if(actorFindings.quantity != 0){
                 component.quantity = component.quantity + actorFindings.quantity;
                 if (component.quantity < 0) {
