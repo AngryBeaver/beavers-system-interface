@@ -385,6 +385,9 @@ export class CoreSystem implements System {
             if(prop != undefined && prop != ""){
                 obj = obj[prop]
             }
+            if(obj === undefined){
+                return undefined;
+            }
         };
         return obj;
     }
