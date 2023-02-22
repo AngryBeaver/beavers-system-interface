@@ -4,7 +4,10 @@
     "MethodNotSupported": "Your system does not yet support method: ",
     "RemainingQuantityLessThenZero": "not enough ",
     "NotEnoughMoney": "not enough money",
-    "DocumentNotFound": "document not found for :"
-
+    "DocumentNotFound": "document not found for :",
+    "select-dialog": {
+      "title": "Selection",
+      "preselection": "choose"
+    }
   }
 }

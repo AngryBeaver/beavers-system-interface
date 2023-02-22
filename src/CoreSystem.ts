@@ -1,4 +1,5 @@
 import {NAMESPACE} from "./main.js";
+import {SelectDialog} from "./apps/SelectDialog.js";
 
 export class CoreSystem implements System {
     _implementation: SystemApi;
@@ -116,7 +117,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    actorRollAbility(actor, abilityId: string): Promise<any> {
+    actorRollAbility(actor, abilityId: string): Promise<Roll> {
         if (this._implementation?.actorRollAbility !== undefined) {
             return this._implementation.actorRollAbility(actor, abilityId);
         } else {
@@ -124,11 +125,19 @@ export class CoreSystem implements System {
         }
     }
 
-    actorRollSkill(actor, skillId: string): Promise<any> {
+    actorRollSkill(actor, skillId: string): Promise<Roll> {
         if (this._implementation?.actorRollSkill !== undefined) {
             return this._implementation.actorRollSkill(actor, skillId);
         } else {
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollSkill');
+        }
+    }
+
+    actorRollTool(actor, item): Promise<Roll> {
+        if (this._implementation?.actorRollTool !== undefined) {
+            return this._implementation.actorRollTool(actor, item);
+        } else {
+            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollItem');
         }
     }
 
@@ -405,6 +414,24 @@ export class CoreSystem implements System {
                 obj = obj[prop];
             }
         }
+    }
+
+    async uiDialogSelect(data: SelectData):Promise<string> {
+        return SelectDialog.promise(data);
+    }
+
+    onClickOutside(selector:string|Element|JQuery,action:(selector:string|Element|JQuery)=>void):void {
+        const outsideClickListener = (event) => {
+            const $target = $(event.target);
+            if (!$target.closest(selector).length) {
+                action(selector);
+                removeClickListener();
+            }
+        }
+        const removeClickListener = () => {
+            document.removeEventListener('click', outsideClickListener);
+        }
+        document.addEventListener('click', outsideClickListener);
     }
 
 }
