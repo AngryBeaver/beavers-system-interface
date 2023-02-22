@@ -23,6 +23,7 @@ BSI,
 - adjust Currencies
 - manipulate Items
 - roll on skill,abilities
+- UI Dialog Selectbox
 ## How to work with this
 ### Setup
 - register your module to BSI
@@ -46,6 +47,22 @@ your module can access all "System" interface methods and properties:
 [functions](https://github.com/AngryBeaver/beavers-system-interface/wiki/Beaver's-System-Interface)
 
 [types.ts](https://github.com/AngryBeaver/beavers-system-interface/blob/main/src/types.ts)
+
+e.g.
+````javascript
+const selection = await beaversSystemInterface.uiDialogSelect({
+    choices:[
+    {text:"Carpenter's Tools:8",img:".."},
+    {text:"Cartographer's Tools:8",img:".."},
+    {text:"Weaver's Tools:8",img:".."},
+    {text:"Alchemist's Supplies:8",img:".."}
+  ]
+});
+````
+![img.png](https://github.com/AngryBeaver/beavers-system-interface/blob/main/pictures/selection.png)
+
+![img.png](https://github.com/AngryBeaver/beavers-system-interface/blob/main/pictures/dropdown.png)
+
 
 ## TypeScript Support
 

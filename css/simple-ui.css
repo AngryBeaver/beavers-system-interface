@@ -1,0 +1,128 @@
+.simple-ui .dropdown {
+    width: 100%;
+    cursor: pointer;
+    word-wrap: break-word;
+    line-height: 20px;
+    white-space: normal;
+    outline: 0;
+    transform: rotateZ(0);
+    min-width: 14em;
+    background: url(../../../ui/parchment.jpg) repeat;
+    color: rgba(0, 0, 0, .87);
+    box-shadow: none;
+    border: 1px solid rgba(34, 36, 38, .15);
+    border-radius: 0.28571429rem;
+}
+.simple-ui .dropdown.l {
+    line-height: 30px;
+}
+
+.simple-ui .dropdown:hover {
+    border-color: rgba(34, 36, 38, .35);
+    box-shadow: 0 0 8px red;
+}
+
+.simple-ui .dropdown .fa-caret-down {
+    float: right;
+    line-height: 20px;
+    padding: 0 1em;
+}
+.simple-ui .dropdown.l .fa-caret-down {
+    line-height: 30px;
+}
+
+.simple-ui .dropdown .default-text {
+    color: rgba(100, 100, 100, .87);
+    padding-left: 1em;
+    font-weight: 600;
+}
+
+.simple-ui .dropdown .dropdown-content {
+    overflow:hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-overflow-scrolling: touch;
+    display:none;
+    outline: 0;
+    margin: 0 -1px;
+    min-width: calc(100% + 10px);
+    width: calc(100% + 10px);
+    box-shadow: 0 2px 3px 0 rgb(34 36 38 / 15%);
+    transition: opacity .1s ease;
+    cursor: auto;
+    position: absolute;
+    outline: 0;
+    top: 100%;
+    min-width: -webkit-max-content;
+    min-width: -moz-max-content;
+    min-width: max-content;
+    text-shadow: none;
+    text-align: left;
+    z-index: 11;
+    will-change: transform, opacity;
+    padding:0px 4px 4px 4px;
+    left:-4px;
+}
+
+.simple-ui .dropdown.active .dropdown-content {
+    display:block;
+}
+
+.simple-ui .dropdown.active .dropdown-inner {
+    display: block;
+    box-shadow: 0 0 8px red;
+    border-top-width: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-radius: 0.28571429rem;
+    border: 1px solid #111;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: url(../../../ui/parchment.jpg) repeat;
+    max-height:120px;
+}
+
+.simple-ui .dropdown.active {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-color: #111;
+    box-shadow: 0 0 8px red;
+}
+
+.simple-ui .dropdown .dropdown-content .option {
+    border-top: 1px solid #999;
+    padding-left: 1em;
+    white-space: normal;
+    word-wrap: normal;
+    position: relative;
+    cursor: pointer;
+    display: block;
+    height: auto;
+    text-align: left;
+    color: rgba(0, 0, 0, .87);
+    font-size: 1rem;
+    text-transform: none;
+    font-weight: 400;
+    box-shadow: none;
+    -webkit-touch-callout: none;
+}
+
+.simple-ui .dropdown .dropdown-content .option.selected {
+    font-weight:600;
+}
+
+.simple-ui .dropdown .option-content{
+    text-indent: 20px;
+    background-size: 18px 18px;
+    background-position-y: 1px;
+    background-repeat: no-repeat;"
+}
+.simple-ui .dropdown.l .option-content{
+    text-indent: 30px;
+    background-size: 28px 28px;
+}
+
+.window-app.select-dialog  .window-content {
+    overflow-y: unset;
+    overflow-x: unset;
+}

@@ -7,8 +7,9 @@ interface SystemApi {
     configCurrencies: CurrencyConfig[];
     configCanRollAbility: boolean;
     configLootItemType: string;
-    actorRollSkill: (actor, skillId: string) => Promise<any>;
-    actorRollAbility: (actor, abilityId: string) => Promise<any>;
+    actorRollSkill: (actor, skillId: string) => Promise<Roll>;
+    actorRollAbility: (actor, abilityId: string) => Promise<Roll>;
+    actorRollTool?: (actor,item) => Promise<Roll>;
     actorCurrenciesGet?: (actor) => Currencies;
     actorCurrenciesAdd?: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: string) => void;
@@ -39,6 +40,20 @@ interface System extends SystemApi {
     objectAttributeGet:(obj:any, attribute:string)=>any,
     objectAttributeSet:(obj:any, attribute:string, value)=>void,
     itemListComponentFind:(itemList,component: ComponentData)=>{components:Component[],quantity:number},
+    uiDialogSelect:(data: SelectData)=>Promise<string>
+    onClickOutside:(selector:string|Element|JQuery,action:(selector:string|Element|JQuery)=>void)=>void
+}
+
+interface SelectData {
+    choices:{
+        [id:string]:{     //id of your choice
+            text:string,  //text of your choice
+            img?:string   //optional image of your choice
+        }
+    },
+    selected?: string, //id of preselection
+    input?: string //name of input for usage within form
+    size?:"l"   //size of the selection height size:l = 30px height default 20px height
 }
 
 /**

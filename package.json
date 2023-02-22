@@ -1,13 +1,10 @@
 {
 	"name": "beavers-system-interface",
 	"title": "Beaver's System Interface",
-	"version": "1.0.7",
+	"version": "1.1.0",
 	"description": "Beaver's System Interface",
 	"devDir": "C:\\Users\\Riess\\AppData\\Local\\FoundryVTT\\Data\\modules",
 	"main": "src/main.js",
-	"files": [
-		"src/*"
-	],
 	"scripts": {
 		"type": "npx -p typescript tsc src/types.ts --declaration --emitDeclarationOnly --outDir dist/src",
 		"build": "npx gulp",
