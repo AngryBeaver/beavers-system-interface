@@ -12,7 +12,7 @@
                         <div class="option {{#if (eq ../selected @key)}}selected{{/if}}"
                              data-id="{{@key}}">
                             <div class="option-content"
-                                 {{#if this.img}}style="background-image:url('{{this.img}}');"{{/if}}>
+                                 style="{{#if this.img}}background-image:url('{{this.img}}');{{else}}text-indent:0px{{/if}}">
                                 {{this.text}}
                             </div>
                         </div>
