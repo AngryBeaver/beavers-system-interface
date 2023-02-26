@@ -59,7 +59,6 @@ const selection = await beaversSystemInterface.uiDialogSelect({
   ]
 });
 ````
-![img.png](https://github.com/AngryBeaver/beavers-system-interface/blob/main/pictures/selection.png)
 
 ![img.png](https://github.com/AngryBeaver/beavers-system-interface/blob/main/pictures/dropdown.png)
 
