@@ -32,7 +32,7 @@ export class SelectDialog extends Application {
             title: game["i18n"].localize(`beaversSystemInterface.select-dialog.title`),
             width: 300,
             height: 80,
-            template: "modules/beavers-system-interface/templates/select.hbs",
+            template: "modules/beavers-system-interface/templates/selectDialog.hbs",
             resizable: false,
             classes: ["select-dialog"],
             popOut: true

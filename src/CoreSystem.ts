@@ -137,7 +137,7 @@ export class CoreSystem implements System {
         if (this._implementation?.actorRollTool !== undefined) {
             return this._implementation.actorRollTool(actor, item);
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollItem');
+            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollTool');
         }
     }
 
@@ -418,20 +418,6 @@ export class CoreSystem implements System {
 
     async uiDialogSelect(data: SelectData):Promise<string> {
         return SelectDialog.promise(data);
-    }
-
-    onClickOutside(selector:string|Element|JQuery,action:(selector:string|Element|JQuery)=>void):void {
-        const outsideClickListener = (event) => {
-            const $target = $(event.target);
-            if (!$target.closest(selector).length) {
-                action(selector);
-                removeClickListener();
-            }
-        }
-        const removeClickListener = () => {
-            document.removeEventListener('click', outsideClickListener);
-        }
-        document.addEventListener('click', outsideClickListener);
     }
 
 }

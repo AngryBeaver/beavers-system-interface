@@ -1,5 +1,5 @@
 ## 1.1.x
-- Add onClickOutside
+- Add CustomElement `<beavers-selection>`
 - Add uiDialogSelect
 - Add `actorRollItem: (actor,item) => Promise<Roll>`;
 - Fix actorRollSkill returns now `Promise<Roll>` instead of `Promise<any>`

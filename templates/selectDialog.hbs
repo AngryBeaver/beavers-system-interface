@@ -1,0 +1,11 @@
+<beavers-selection>
+    <select name="{{this.name}}" {{#if size}}size="{{size}}"{{/if}} {{#if disabled}}disabled{{/if}}>
+        {{#select this.selected}}
+            {{#each choices}}
+                <option value="{{@key}}" img="{{this.img}}">
+                    {{this.text}}
+                </option>
+            {{/each}}
+        {{/select}}
+    </select>
+</beavers-selection>
