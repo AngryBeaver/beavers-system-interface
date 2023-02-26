@@ -50,10 +50,10 @@ interface SelectData {
             img?:string   //optional image of your choice
         }
     },
-    selected?: string, //id of preselection
-    name?: string //name of input for usage within form
-    size?:string   //height of the selection default 20px size:l=30px
-    disabled?:string
+    selected?: string,    //id of preselection
+    name?: string         //name of input for usage within form
+    size?:string          //height of the selection default 20px size:l=30px
+    disabled?:string      //simulates disabled
 }
 
 /**
