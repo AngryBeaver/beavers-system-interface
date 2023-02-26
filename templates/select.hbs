@@ -1,41 +1,23 @@
 <div class="simple-ui">
-    <div class="dropdown {{#if size}}{{size}}{{/if}}"
-         onclick="
-            beaversSystemInterface.onClickOutside($(this),(selector)=>selector.removeClass('active'));
-            $(this).addClass('active');
-            $(this).find('.dropdown-inner').scrollTop($(this).find('.selected').offset()?.top);
-         "
-    >
-        <input type="hidden" name="{{input}}">
+    <div class="dropdown {{#if size}}{{size}}{{/if}} {{#if disabled}}disabled{{/if}}">
         <i class="fa-solid fa-caret-down"></i>
-<div class="default-text">
-    {{#if selected}}
-        <div class="option-content"
-             {{#if this.img}}style="background-image:url('{{this.img}}');"{{/if}}>
-            {{this.text}}
+        <input name="{{name}}" style="display:none">
+        <div class="default-text">
+            {{localize "beaversSystemInterface.select-dialog.preselection"}}
         </div>
-    {{else}}
-        {{localize "beaversSystemInterface.select-dialog.preselection"}}
-    {{/if}}</div>
         <div class="dropdown-content">
-            <div class="dropdown-inner">
-            {{#each choices}}
-                <div class="option {{#if (eq ../selected @key)}}selected{{/if}}" data-id="{{@key}}" onclick="
-                        const dropdown = $(this).closest('.dropdown');
-                        dropdown.find('.default-text').html($(this).html());
-                        $(this).closest('.simple-ui').click();
-                        dropdown.find('.selected').removeClass('selected');
-                        $(this).addClass('selected');
-                        dropdown.find('input').val({{@key}});
-                        dropdown.find('input').trigger('input');
-                        event.stopPropagation();
-                        ">
-                    <div class="option-content"
-                         {{#if this.img}}style="background-image:url('{{this.img}}');"{{/if}}>
-                        {{this.text}}
-                    </div>
+            <div style="position:fixed">
+                <div tabindex="0" class="dropdown-inner">
+                    {{#each choices}}
+                        <div class="option {{#if (eq ../selected @key)}}selected{{/if}}"
+                             data-id="{{@key}}">
+                            <div class="option-content"
+                                 style="{{#if this.img}}background-image:url('{{this.img}}');{{else}}text-indent:0px{{/if}}">
+                                {{this.text}}
+                            </div>
+                        </div>
+                    {{/each}}
                 </div>
-            {{/each}}
             </div>
         </div>
     </div>

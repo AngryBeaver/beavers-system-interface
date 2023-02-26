@@ -5,36 +5,42 @@
     line-height: 20px;
     white-space: normal;
     outline: 0;
-    transform: rotateZ(0);
     min-width: 14em;
     background: url(../../../ui/parchment.jpg) repeat;
-    color: rgba(0, 0, 0, .87);
     box-shadow: none;
-    border: 1px solid rgba(34, 36, 38, .15);
     border-radius: 0.28571429rem;
+    position:relative;
 }
+
+.simple-ui .dropdown .dropdown-content .option.selected {
+    background-color:deepskyblue;
+}
+
+.simple-ui .dropdown {
+    border: 1px solid #7a7971;
+    color: rgba(0, 0, 0, .87);
+    font-size: 12px;
+}
+
 .simple-ui .dropdown.l {
     line-height: 30px;
 }
-
-.simple-ui .dropdown:hover {
-    border-color: rgba(34, 36, 38, .35);
-    box-shadow: 0 0 8px red;
+.simple-ui .dropdown.disabled {
+    color: rgb(100,100,100);
+    cursor: auto;
 }
 
 .simple-ui .dropdown .fa-caret-down {
     float: right;
     line-height: 20px;
-    padding: 0 1em;
+    padding: 0 4px;
 }
 .simple-ui .dropdown.l .fa-caret-down {
     line-height: 30px;
 }
 
 .simple-ui .dropdown .default-text {
-    color: rgba(100, 100, 100, .87);
-    padding-left: 1em;
-    font-weight: 600;
+    padding-left: 6px;
 }
 
 .simple-ui .dropdown .dropdown-content {
@@ -43,7 +49,6 @@
     backface-visibility: hidden;
     -webkit-overflow-scrolling: touch;
     display:none;
-    outline: 0;
     margin: 0 -1px;
     min-width: calc(100% + 10px);
     width: calc(100% + 10px);
@@ -51,15 +56,9 @@
     transition: opacity .1s ease;
     cursor: auto;
     position: absolute;
-    outline: 0;
-    top: 100%;
-    min-width: -webkit-max-content;
-    min-width: -moz-max-content;
-    min-width: max-content;
     text-shadow: none;
     text-align: left;
     z-index: 11;
-    will-change: transform, opacity;
     padding:0px 4px 4px 4px;
     left:-4px;
 }
@@ -80,6 +79,7 @@
     overflow-y: auto;
     background: url(../../../ui/parchment.jpg) repeat;
     max-height:120px;
+    outline: none;
 }
 
 .simple-ui .dropdown.active {
@@ -91,7 +91,7 @@
 
 .simple-ui .dropdown .dropdown-content .option {
     border-top: 1px solid #999;
-    padding-left: 1em;
+    padding-left: 6px;
     white-space: normal;
     word-wrap: normal;
     position: relative;
@@ -99,16 +99,9 @@
     display: block;
     height: auto;
     text-align: left;
-    color: rgba(0, 0, 0, .87);
-    font-size: 1rem;
     text-transform: none;
-    font-weight: 400;
     box-shadow: none;
     -webkit-touch-callout: none;
-}
-
-.simple-ui .dropdown .dropdown-content .option.selected {
-    font-weight:600;
 }
 
 .simple-ui .dropdown .option-content{
@@ -120,9 +113,4 @@
 .simple-ui .dropdown.l .option-content{
     text-indent: 30px;
     background-size: 28px 28px;
-}
-
-.window-app.select-dialog  .window-content {
-    overflow-y: unset;
-    overflow-x: unset;
 }

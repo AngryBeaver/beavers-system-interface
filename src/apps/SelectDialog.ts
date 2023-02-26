@@ -32,7 +32,7 @@ export class SelectDialog extends Application {
             title: game["i18n"].localize(`beaversSystemInterface.select-dialog.title`),
             width: 300,
             height: 80,
-            template: "modules/beavers-system-interface/templates/select.hbs",
+            template: "modules/beavers-system-interface/templates/selectDialog.hbs",
             resizable: false,
             classes: ["select-dialog"],
             popOut: true
@@ -44,6 +44,12 @@ export class SelectDialog extends Application {
     }
 
     activateListeners(html: JQuery) {
+        html.find("select").on("input", () => {
+            this.selected = html.find("select").val() as string;
+            if (this.selected != "") {
+                this.close();
+            }
+        })
         html.find("input").on("input", () => {
             const result = html.find("input").val() as string;
             this.selected = result;

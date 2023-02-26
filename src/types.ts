@@ -41,7 +41,6 @@ interface System extends SystemApi {
     objectAttributeSet:(obj:any, attribute:string, value)=>void,
     itemListComponentFind:(itemList,component: ComponentData)=>{components:Component[],quantity:number},
     uiDialogSelect:(data: SelectData)=>Promise<string>
-    onClickOutside:(selector:string|Element|JQuery,action:(selector:string|Element|JQuery)=>void)=>void
 }
 
 interface SelectData {
@@ -52,8 +51,9 @@ interface SelectData {
         }
     },
     selected?: string, //id of preselection
-    input?: string //name of input for usage within form
-    size?:"l"   //size of the selection height size:l = 30px height default 20px height
+    name?: string //name of input for usage within form
+    size?:string   //height of the selection default 20px size:l=30px
+    disabled?:string
 }
 
 /**

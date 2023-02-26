@@ -1,0 +1,12 @@
+<beavers-selection>
+    <select name="{{this.name}}" {{#if size}}size="{{size}}"{{/if}} {{#if disabled}}disabled{{/if}}>
+        {{#select this.selected}}
+            {{#unless this.selected}}<option selected disabled>{{localize "beaversSystemInterface.select-dialog.preselection"}}</option>{{/unless}}
+            {{#each choices}}
+                <option value="{{@key}}" img="{{this.img}}">
+                    {{this.text}}
+                </option>
+            {{/each}}
+        {{/select}}
+    </select>
+</beavers-selection>
