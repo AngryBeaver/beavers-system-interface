@@ -44,6 +44,12 @@ export class SelectDialog extends Application {
     }
 
     activateListeners(html: JQuery) {
+        html.find("select").on("input", () => {
+            this.selected = html.find("select").val() as string;
+            if (this.selected != "") {
+                this.close();
+            }
+        })
         html.find("input").on("input", () => {
             const result = html.find("input").val() as string;
             this.selected = result;
