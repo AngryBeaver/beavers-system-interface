@@ -305,7 +305,11 @@ export class CoreSystem implements System {
         if (parts[0] === "Compendium") {
             const pack = game["packs"].get(parts[1] + "." + parts[2]);
             if (pack !== undefined) {
-                result = await pack.getDocument(parts[3]);
+                let id = parts[3];
+                if(parts.length >= 5){
+                    id = parts[4];
+                }
+                result = await pack.getDocument(id);
             }
         } else {
             result = await fromUuid(uuid);
