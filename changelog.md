@@ -1,3 +1,6 @@
+## 1.1.1
+- Add compatibility to v11
+
 ## 1.1.x
 - Add CustomElement `<beavers-selection>`
 - Add uiDialogSelect
