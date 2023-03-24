@@ -1,3 +1,7 @@
+## 1.1.2
+- Fix quantity zero
+- objectAttributeGet has now optional fallback parameter
+
 ## 1.1.1
 - Add compatibility to v11
 

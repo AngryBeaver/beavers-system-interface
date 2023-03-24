@@ -368,7 +368,7 @@ export class CoreSystem implements System {
                 img: entity.img,
                 name: entity.name,
                 type : entity.documentName,
-                quantity: this.objectAttributeGet(entity,beaversSystemInterface.itemQuantityAttribute) || 1,
+                quantity: this.objectAttributeGet(entity,beaversSystemInterface.itemQuantityAttribute,1),
                 itemType: entity.documentName === "Item" ? entity.type : undefined,
             }
             return beaversSystemInterface.componentCreate(data);
@@ -391,19 +391,20 @@ export class CoreSystem implements System {
         }
     }
 
-    objectAttributeGet(obj:any, attribute:string):any {
+    objectAttributeGet(obj:any, attribute:string,fallback:any):any {
         const arr:string[] = attribute.split(".");
         while(arr.length){
             const prop = arr.shift();
-            if(prop != undefined && prop != ""){
+            if(prop != undefined && prop !== ""){
                 obj = obj[prop]
             }
             if(obj === undefined){
                 return undefined;
             }
-        };
+        }
         return obj;
     }
+
     objectAttributeSet(obj:any, attribute:string, value):void {
         const arr:string[] = attribute.split(".");
         while(arr.length){

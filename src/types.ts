@@ -37,7 +37,7 @@ interface System extends SystemApi {
     componentDefaultData: ComponentData,
     componentFromEntity:(entity)=>Component,
     componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
-    objectAttributeGet:(obj:any, attribute:string)=>any,
+    objectAttributeGet:(obj:any, attribute:string, fallback?:any)=>any,
     objectAttributeSet:(obj:any, attribute:string, value)=>void,
     itemListComponentFind:(itemList,component: ComponentData)=>{components:Component[],quantity:number},
     uiDialogSelect:(data: SelectData)=>Promise<string>

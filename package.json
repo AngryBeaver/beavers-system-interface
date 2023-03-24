@@ -1,7 +1,7 @@
 {
 	"name": "beavers-system-interface",
 	"title": "Beaver's System Interface",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "Beaver's System Interface",
 	"devDir": "C:\\Users\\Riess\\AppData\\Local\\FoundryVTT\\Data\\modules",
 	"#devDir": "C:\\data\\Data\\modules",
