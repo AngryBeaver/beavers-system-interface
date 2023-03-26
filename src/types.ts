@@ -14,7 +14,7 @@ interface SystemApi {
     actorCurrenciesAdd?: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: string) => void;
     componentIsSame?:(a: ComponentData,b: ComponentData)=>boolean,
-    componentFromEntity?:(entity,jsonData?:boolean)=>Component,
+    componentFromEntity?:(entity,hasJsonData?:boolean)=>Component,
     componentDefaultData?: ComponentData,
     itemQuantityAttribute:string,
     itemPriceAttribute:string,
@@ -35,7 +35,7 @@ interface System extends SystemApi {
     uuidToDocument: (string)=>Promise<foundry.abstract.Document<any, any>>
     componentCreate:(data) => Component
     componentDefaultData: ComponentData,
-    componentFromEntity:(entity,jsonData?:boolean)=>Component,
+    componentFromEntity:(entity,hasJsonData?:boolean)=>Component,
     componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
     objectAttributeGet:(obj:any, attribute:string, fallback?:any)=>any,
     objectAttributeSet:(obj:any, attribute:string, value)=>void,
