@@ -242,7 +242,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    async actorComponentListAdd(actor, componentList: Component[]): Promise<void> {
+    async actorComponentListAdd(actor, componentList: Component[]): Promise<ItemChange> {
         //unique Components
         const uniqueComponents: Component[] = [];
         componentList.forEach(component => {
@@ -259,13 +259,10 @@ export class CoreSystem implements System {
             }
         });
         //create ItemChange from unique components;
-        const itemChange: {
-            create: any[]
-            update: any[],
-            delete: string[]
-        } = {
+        const itemChange:ItemChange = {
             create: [],
             update: [],
+            merge: [],
             delete: []
         }
         for (const component of uniqueComponents) {
@@ -280,7 +277,12 @@ export class CoreSystem implements System {
                     this.objectAttributeSet(update,beaversSystemInterface.itemQuantityAttribute,component.quantity);
                     itemChange.update.push(update);
                 }
-                itemChange.delete.push(...actorFindings.components.map(c=>c.id));
+                if (actorFindings.components[0]){
+                    const entity = await actorFindings.components[0].getEntity();
+                    component.jsonData = entity.toObject()
+                    itemChange.delete.push(component);
+                }
+                itemChange.merge.push(...actorFindings.components.map(c => c.id));
             } else {
                 if (component.quantity < 0) {
                     throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
@@ -295,7 +297,8 @@ export class CoreSystem implements System {
         }
         await actor.createEmbeddedDocuments("Item", itemChange.create);
         await actor.updateEmbeddedDocuments("Item", itemChange.update);
-        await actor.deleteEmbeddedDocuments("Item", itemChange.delete);
+        await actor.deleteEmbeddedDocuments("Item", itemChange.merge);
+        return itemChange;
     }
 
 
@@ -323,10 +326,18 @@ export class CoreSystem implements System {
     componentCreate(data: any): Component {
         const result = mergeObject(this.componentDefaultData, data, {insertKeys: false});
         result.getEntity = async () => {
-            return game[NAMESPACE].uuidToDocument(result.uuid);
+            if (result.jsonData) {
+                if (result.type === "Item") {
+                    return Item["fromSource"](result.jsonData);
+                }
+                if (result.type === "RollTable") {
+                    return RollTable["fromSource"](result.jsonData);
+                }
+            }
+            return beaversSystemInterface.uuidToDocument(result.uuid);
         }
         result.isSame = (component: ComponentData) => {
-            return game[NAMESPACE].componentIsSame(result, component);
+            return beaversSystemInterface.componentIsSame(result, component);
         }
         return result as Component;
     }
@@ -343,6 +354,7 @@ export class CoreSystem implements System {
                 name: "invalid",
                 quantity: 1,
                 itemType: undefined,
+                jsonData: undefined
             }
         }
     }
@@ -358,7 +370,7 @@ export class CoreSystem implements System {
         }
     }
 
-    componentFromEntity(entity: any): Component {
+    componentFromEntity(entity: any, hasJsonData: boolean = false): Component {
         if (this._implementation?.componentFromEntity !== undefined) {
             return this._implementation.componentFromEntity(entity);
         } else {
@@ -370,6 +382,7 @@ export class CoreSystem implements System {
                 type : entity.documentName,
                 quantity: this.objectAttributeGet(entity,beaversSystemInterface.itemQuantityAttribute,1),
                 itemType: entity.documentName === "Item" ? entity.type : undefined,
+                jsonData: hasJsonData? entity.toObject() : undefined
             }
             return beaversSystemInterface.componentCreate(data);
         }

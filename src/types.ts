@@ -14,7 +14,7 @@ interface SystemApi {
     actorCurrenciesAdd?: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: string) => void;
     componentIsSame?:(a: ComponentData,b: ComponentData)=>boolean,
-    componentFromEntity?:(entity)=>Component,
+    componentFromEntity?:(entity,jsonData?:boolean)=>Component,
     componentDefaultData?: ComponentData,
     itemQuantityAttribute:string,
     itemPriceAttribute:string,
@@ -31,11 +31,11 @@ interface System extends SystemApi {
     actorCurrenciesGet: (actor) => Currencies;
     actorCurrenciesAdd: (actor, currencies: Currencies) => Promise<void>; //may throw Error
     actorCurrenciesCanAdd:(actor, currencies: Currencies)=>boolean;
-    actorComponentListAdd:(actor,componentList: Component[])=>Promise<void>,
+    actorComponentListAdd:(actor,componentList: Component[])=>Promise<ItemChange>,
     uuidToDocument: (string)=>Promise<foundry.abstract.Document<any, any>>
     componentCreate:(data) => Component
     componentDefaultData: ComponentData,
-    componentFromEntity:(entity)=>Component,
+    componentFromEntity:(entity,jsonData?:boolean)=>Component,
     componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
     objectAttributeGet:(obj:any, attribute:string, fallback?:any)=>any,
     objectAttributeSet:(obj:any, attribute:string, value)=>void,
@@ -75,8 +75,8 @@ interface ComponentData {
     img: string;
     quantity: number;
     itemType?: string;      //if it is of type item there is an itemType
+    jsonData?: string;      //to store a component completly
     [key: string]: unknown; //this is system dependent information! do not relay on it. It is only needed for internal behavior e.g. isSame.
-
 }
 
 /**
@@ -102,4 +102,10 @@ interface CurrencyConfig {
     factor: number, //factor how often the lowest currency fits into this currency
     uuid?: string, //system dependent if this is an item
     component?: Component //will get automatically attached when an uuid is given
+}
+interface ItemChange {
+    create: any[]
+    update: any[],
+    merge: string[],
+    delete: ComponentData[]
 }
