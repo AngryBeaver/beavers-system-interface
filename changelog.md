@@ -1,6 +1,8 @@
 ## 1.1.2
 - Fix quantity zero
 - objectAttributeGet has now optional fallback parameter
+- actorComponentListAdd will now return ItemChange
+- componentData may now have the original ItemData stored
 
 ## 1.1.1
 - Add compatibility to v11
