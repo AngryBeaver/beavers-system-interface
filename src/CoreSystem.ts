@@ -2,6 +2,7 @@ import {NAMESPACE} from "./main.js";
 import {SelectDialog} from "./apps/SelectDialog.js";
 
 export class CoreSystem implements System {
+    _version: number =  2
     _implementation: SystemApi;
     _modules: string[] = [];
     _configCurrencies:CurrencyConfig[];
@@ -163,26 +164,58 @@ export class CoreSystem implements System {
         return result;
     }
 
-    async actorCurrenciesAdd(actor, currencies: Currencies): Promise<void> {
+    currenciesSum(source: Currencies, add: Currencies, doExchange:boolean):Currencies{
+        if (doExchange) {
+            return this._currenciesSumExchange(source,add);
+        }else{
+            return this._currenciesSumExact(source,add)
+        }
+    }
+
+    _currenciesSumExchange(source: Currencies, add: Currencies): Currencies{
+        const actorValue = beaversSystemInterface.currenciesToLowestValue(source);
+        const addValue = beaversSystemInterface.currenciesToLowestValue(add);
+        const result = actorValue + addValue;
+        if (result < 0) {
+            throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
+        }
+        return beaversSystemInterface.currencyToCurrencies(result);
+    }
+    _currenciesSumExact(source: Currencies, add: Currencies):Currencies{
+        let resultCurrencies = {};
+        for(const [key, value] of Object.entries(add)){
+            const sum = source[key] + value;
+            if(sum< 0){
+                throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
+            }
+            resultCurrencies[key] = sum;
+        }
+        return resultCurrencies;
+    }
+
+    async actorCurrenciesAdd(actor, currencies: Currencies, doExchange:boolean = true): Promise<void> {
         if (this._implementation?.actorCurrenciesAdd !== undefined) {
-            return this._implementation.actorCurrenciesAdd(actor, currencies);
+            if(doExchange){
+                console.warn("actorCurrenciesAdd is deprecated plz upgrade your bsa-x module");
+            }else{
+                ui.notifications?.error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+                throw Error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+            }
+            return await this._implementation.actorCurrenciesAdd(actor, currencies);
+        }
+        const actorCurrencies = beaversSystemInterface.actorCurrenciesGet(actor);
+        let resultCurrencies = this.currenciesSum(actorCurrencies,currencies,doExchange);
+        if (this._implementation?.actorCurrenciesStore !== undefined) {
+            return await this._implementation.actorCurrenciesStore(actor, resultCurrencies);
         } else {
             if(this._configCurrencies===undefined){
                 throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorCurrenciesAdd');
             }
-            await this._actorCurrenciesAdd(actor, currencies);
+            await this._actorStoreCurrency(actor, resultCurrencies);
         }
     }
 
-    async _actorCurrenciesAdd(actor, currencies: Currencies): Promise<void>{
-        const actorCurrencies = beaversSystemInterface.actorCurrenciesGet(actor);
-        const actorValue = beaversSystemInterface.currenciesToLowestValue(actorCurrencies);
-        const addValue = beaversSystemInterface.currenciesToLowestValue(currencies);
-        const result = actorValue+addValue;
-        if (result < 0) {
-            throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
-        }
-        const resultCurrencies = beaversSystemInterface.currencyToCurrencies(result);
+    async _actorStoreCurrency(actor, resultCurrencies: Currencies): Promise<void> {
         actor = await fromUuid(actor.uuid);
         const deleteItems:string[] = []
         const createItems:any[] = [];
@@ -242,7 +275,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    async actorComponentListAdd(actor, componentList: Component[]): Promise<void> {
+    async actorComponentListAdd(actor, componentList: Component[]): Promise<ItemChange> {
         //unique Components
         const uniqueComponents: Component[] = [];
         componentList.forEach(component => {
@@ -259,13 +292,10 @@ export class CoreSystem implements System {
             }
         });
         //create ItemChange from unique components;
-        const itemChange: {
-            create: any[]
-            update: any[],
-            delete: string[]
-        } = {
+        const itemChange:ItemChange = {
             create: [],
             update: [],
+            merge: [],
             delete: []
         }
         for (const component of uniqueComponents) {
@@ -280,7 +310,12 @@ export class CoreSystem implements System {
                     this.objectAttributeSet(update,beaversSystemInterface.itemQuantityAttribute,component.quantity);
                     itemChange.update.push(update);
                 }
-                itemChange.delete.push(...actorFindings.components.map(c=>c.id));
+                if (actorFindings.components[0]){
+                    const entity = await actorFindings.components[0].getEntity();
+                    component.jsonData = entity.toObject()
+                    itemChange.delete.push(component);
+                }
+                itemChange.merge.push(...actorFindings.components.map(c => c.id));
             } else {
                 if (component.quantity < 0) {
                     throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
@@ -295,7 +330,8 @@ export class CoreSystem implements System {
         }
         await actor.createEmbeddedDocuments("Item", itemChange.create);
         await actor.updateEmbeddedDocuments("Item", itemChange.update);
-        await actor.deleteEmbeddedDocuments("Item", itemChange.delete);
+        await actor.deleteEmbeddedDocuments("Item", itemChange.merge);
+        return itemChange;
     }
 
 
@@ -323,10 +359,18 @@ export class CoreSystem implements System {
     componentCreate(data: any): Component {
         const result = mergeObject(this.componentDefaultData, data, {insertKeys: false});
         result.getEntity = async () => {
-            return game[NAMESPACE].uuidToDocument(result.uuid);
+            if (result.jsonData) {
+                if (result.type === "Item") {
+                    return Item["fromSource"](result.jsonData);
+                }
+                if (result.type === "RollTable") {
+                    return RollTable["fromSource"](result.jsonData);
+                }
+            }
+            return beaversSystemInterface.uuidToDocument(result.uuid);
         }
         result.isSame = (component: ComponentData) => {
-            return game[NAMESPACE].componentIsSame(result, component);
+            return beaversSystemInterface.componentIsSame(result, component);
         }
         return result as Component;
     }
@@ -343,6 +387,7 @@ export class CoreSystem implements System {
                 name: "invalid",
                 quantity: 1,
                 itemType: undefined,
+                jsonData: undefined
             }
         }
     }
@@ -358,9 +403,13 @@ export class CoreSystem implements System {
         }
     }
 
-    componentFromEntity(entity: any): Component {
+    componentFromEntity(entity: any, hasJsonData: boolean = false): Component {
         if (this._implementation?.componentFromEntity !== undefined) {
-            return this._implementation.componentFromEntity(entity);
+            if(this._implementation.version < 2){
+                ui.notifications?.error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+                throw Error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+            }
+            return this._implementation.componentFromEntity(entity,hasJsonData);
         } else {
             const data = {
                 id: entity.id,
@@ -368,8 +417,9 @@ export class CoreSystem implements System {
                 img: entity.img,
                 name: entity.name,
                 type : entity.documentName,
-                quantity: this.objectAttributeGet(entity,beaversSystemInterface.itemQuantityAttribute) || 1,
+                quantity: this.objectAttributeGet(entity,beaversSystemInterface.itemQuantityAttribute,1),
                 itemType: entity.documentName === "Item" ? entity.type : undefined,
+                jsonData: hasJsonData? entity.toObject() : undefined
             }
             return beaversSystemInterface.componentCreate(data);
         }
@@ -391,19 +441,20 @@ export class CoreSystem implements System {
         }
     }
 
-    objectAttributeGet(obj:any, attribute:string):any {
+    objectAttributeGet(obj:any, attribute:string,fallback:any):any {
         const arr:string[] = attribute.split(".");
         while(arr.length){
             const prop = arr.shift();
-            if(prop != undefined && prop != ""){
+            if(prop != undefined && prop !== ""){
                 obj = obj[prop]
             }
             if(obj === undefined){
                 return undefined;
             }
-        };
+        }
         return obj;
     }
+
     objectAttributeSet(obj:any, attribute:string, value):void {
         const arr:string[] = attribute.split(".");
         while(arr.length){
