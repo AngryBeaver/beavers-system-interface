@@ -1,8 +1,11 @@
-## 1.1.2
+## 2.0.0
 - Fix quantity zero
-- objectAttributeGet has now optional fallback parameter
-- actorComponentListAdd will now return ItemChange
-- componentData may now have the original ItemData stored
+- change: objectAttributeGet has now optional fallback parameter
+- change: actorComponentListAdd will now return ItemChange
+- change: componentData may now have the original ItemData stored
+- breaking bsa.x componentFromEntity has now an additional parameter "hasJsonData"
+- new currenciesSum:(source: Currencies, add: Currencies, doExchange:boolean)=>Currencies
+- breaking bsa.x actorAddCurrencies is gone and now replaced by actorStoreCurrencies and should now longer sumUp the currencies.
 
 ## 1.1.1
 - Add compatibility to v11

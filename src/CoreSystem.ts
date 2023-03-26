@@ -2,6 +2,7 @@ import {NAMESPACE} from "./main.js";
 import {SelectDialog} from "./apps/SelectDialog.js";
 
 export class CoreSystem implements System {
+    _version: number =  2
     _implementation: SystemApi;
     _modules: string[] = [];
     _configCurrencies:CurrencyConfig[];
@@ -163,26 +164,58 @@ export class CoreSystem implements System {
         return result;
     }
 
-    async actorCurrenciesAdd(actor, currencies: Currencies): Promise<void> {
+    currenciesSum(source: Currencies, add: Currencies, doExchange:boolean):Currencies{
+        if (doExchange) {
+            return this._currenciesSumExchange(source,add);
+        }else{
+            return this._currenciesSumExact(source,add)
+        }
+    }
+
+    _currenciesSumExchange(source: Currencies, add: Currencies): Currencies{
+        const actorValue = beaversSystemInterface.currenciesToLowestValue(source);
+        const addValue = beaversSystemInterface.currenciesToLowestValue(add);
+        const result = actorValue + addValue;
+        if (result < 0) {
+            throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
+        }
+        return beaversSystemInterface.currencyToCurrencies(result);
+    }
+    _currenciesSumExact(source: Currencies, add: Currencies):Currencies{
+        let resultCurrencies = {};
+        for(const [key, value] of Object.entries(add)){
+            const sum = source[key] + value;
+            if(sum< 0){
+                throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
+            }
+            resultCurrencies[key] = sum;
+        }
+        return resultCurrencies;
+    }
+
+    async actorCurrenciesAdd(actor, currencies: Currencies, doExchange:boolean = true): Promise<void> {
         if (this._implementation?.actorCurrenciesAdd !== undefined) {
-            return this._implementation.actorCurrenciesAdd(actor, currencies);
+            if(doExchange){
+                console.warn("actorCurrenciesAdd is deprecated plz upgrade your bsa-x module");
+            }else{
+                ui.notifications?.error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+                throw Error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+            }
+            return await this._implementation.actorCurrenciesAdd(actor, currencies);
+        }
+        const actorCurrencies = beaversSystemInterface.actorCurrenciesGet(actor);
+        let resultCurrencies = this.currenciesSum(actorCurrencies,currencies,doExchange);
+        if (this._implementation?.actorCurrenciesStore !== undefined) {
+            return await this._implementation.actorCurrenciesStore(actor, resultCurrencies);
         } else {
             if(this._configCurrencies===undefined){
                 throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorCurrenciesAdd');
             }
-            await this._actorCurrenciesAdd(actor, currencies);
+            await this._actorStoreCurrency(actor, resultCurrencies);
         }
     }
 
-    async _actorCurrenciesAdd(actor, currencies: Currencies): Promise<void>{
-        const actorCurrencies = beaversSystemInterface.actorCurrenciesGet(actor);
-        const actorValue = beaversSystemInterface.currenciesToLowestValue(actorCurrencies);
-        const addValue = beaversSystemInterface.currenciesToLowestValue(currencies);
-        const result = actorValue+addValue;
-        if (result < 0) {
-            throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
-        }
-        const resultCurrencies = beaversSystemInterface.currencyToCurrencies(result);
+    async _actorStoreCurrency(actor, resultCurrencies: Currencies): Promise<void> {
         actor = await fromUuid(actor.uuid);
         const deleteItems:string[] = []
         const createItems:any[] = [];
@@ -372,7 +405,11 @@ export class CoreSystem implements System {
 
     componentFromEntity(entity: any, hasJsonData: boolean = false): Component {
         if (this._implementation?.componentFromEntity !== undefined) {
-            return this._implementation.componentFromEntity(entity);
+            if(this._implementation.version < 2){
+                ui.notifications?.error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+                throw Error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+            }
+            return this._implementation.componentFromEntity(entity,hasJsonData);
         } else {
             const data = {
                 id: entity.id,

@@ -10,8 +10,9 @@ interface SystemApi {
     actorRollSkill: (actor, skillId: string) => Promise<Roll>;
     actorRollAbility: (actor, abilityId: string) => Promise<Roll>;
     actorRollTool?: (actor,item) => Promise<Roll>;
+    actorCurrenciesAdd?: (actor, currencies: Currencies) => Promise<void>; //deprecated
     actorCurrenciesGet?: (actor) => Currencies;
-    actorCurrenciesAdd?: (actor, currencies: Currencies) => Promise<void>; //may throw Error
+    actorCurrenciesStore?: (actor, currencies: Currencies) => Promise<void>;
     actorSheetAddTab:(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody: string) => void;
     componentIsSame?:(a: ComponentData,b: ComponentData)=>boolean,
     componentFromEntity?:(entity,hasJsonData?:boolean)=>Component,
@@ -37,6 +38,7 @@ interface System extends SystemApi {
     componentDefaultData: ComponentData,
     componentFromEntity:(entity,hasJsonData?:boolean)=>Component,
     componentIsSame:(a: ComponentData,b: ComponentData)=>boolean,
+    currenciesSum:(source: Currencies, add: Currencies, doExchange:boolean)=>Currencies
     objectAttributeGet:(obj:any, attribute:string, fallback?:any)=>any,
     objectAttributeSet:(obj:any, attribute:string, value)=>void,
     itemListComponentFind:(itemList,component: ComponentData)=>{components:Component[],quantity:number},

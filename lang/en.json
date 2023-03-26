@@ -1,5 +1,6 @@
 {
   "beaversSystemInterface": {
+    "VersionsMismatch": "Your bsa-x module is outdated and no longer compatible",
     "SystemNotFound": "Could not find an implementation for that system. Maybe you missed to install the correct beavers system implementation module",
     "MethodNotSupported": "Your system does not yet support method: ",
     "RemainingQuantityLessThenZero": "not enough ",
