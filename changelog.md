@@ -1,3 +1,6 @@
+## 2.1.0
+- Add: itemSheetReplaceContent?:(app, html,element)=>void;
+
 ## 2.0.0
 - Fix quantity zero
 - change: objectAttributeGet has now optional fallback parameter

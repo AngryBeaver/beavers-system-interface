@@ -260,6 +260,15 @@ export class CoreSystem implements System {
         }
     }
 
+    itemSheetReplaceContent(app, html, element):void{
+        if (this._implementation?.itemSheetReplaceContent !== undefined) {
+            return this._implementation.itemSheetReplaceContent(app, html, element);
+        } else {
+            html.find(".sheet-body").empty();
+            html.find(".sheet-body").append(element);
+        }
+    }
+
     itemListComponentFind(itemList,component: ComponentData):{components:Component[],quantity:number} {
         const result = {
             quantity:0,
