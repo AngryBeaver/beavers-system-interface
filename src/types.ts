@@ -19,7 +19,7 @@ interface SystemApi {
     componentDefaultData?: ComponentData,
     itemQuantityAttribute:string,
     itemPriceAttribute:string,
-
+    itemSheetReplaceContent?:(app, html,element)=>void;
 }
 
 interface System extends SystemApi {

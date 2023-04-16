@@ -17,6 +17,5 @@ Hooks.on("ready",async function () {
     globalThis.selectionTemplate = await getTemplate('modules/beavers-system-interface/templates/select.hbs');
     customElements.define('beavers-selection',BeaversSelection);
     Hooks.call("beavers-system-interface.ready");
-
 });
 
