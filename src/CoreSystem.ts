@@ -118,7 +118,7 @@ export class CoreSystem implements System {
         return result;
     }
 
-    actorRollAbility(actor, abilityId: string): Promise<Roll> {
+    actorRollAbility(actor, abilityId: string): Promise<Roll|null> {
         if (this._implementation?.actorRollAbility !== undefined) {
             return this._implementation.actorRollAbility(actor, abilityId);
         } else {
@@ -126,7 +126,7 @@ export class CoreSystem implements System {
         }
     }
 
-    actorRollSkill(actor, skillId: string): Promise<Roll> {
+    actorRollSkill(actor, skillId: string): Promise<Roll|null> {
         if (this._implementation?.actorRollSkill !== undefined) {
             return this._implementation.actorRollSkill(actor, skillId);
         } else {
@@ -134,7 +134,7 @@ export class CoreSystem implements System {
         }
     }
 
-    actorRollTool(actor, item): Promise<Roll> {
+    actorRollTool(actor, item): Promise<Roll|null> {
         if (this._implementation?.actorRollTool !== undefined) {
             return this._implementation.actorRollTool(actor, item);
         } else {

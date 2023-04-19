@@ -7,9 +7,9 @@ interface SystemApi {
     configCurrencies: CurrencyConfig[];
     configCanRollAbility: boolean;
     configLootItemType: string;
-    actorRollSkill: (actor, skillId: string) => Promise<Roll>;
-    actorRollAbility: (actor, abilityId: string) => Promise<Roll>;
-    actorRollTool?: (actor,item) => Promise<Roll>;
+    actorRollSkill: (actor, skillId: string) => Promise<Roll|null>;
+    actorRollAbility: (actor, abilityId: string) => Promise<Roll|null>;
+    actorRollTool?: (actor,item) => Promise<Roll|null>;
     actorCurrenciesAdd?: (actor, currencies: Currencies) => Promise<void>; //deprecated
     actorCurrenciesGet?: (actor) => Currencies;
     actorCurrenciesStore?: (actor, currencies: Currencies) => Promise<void>;

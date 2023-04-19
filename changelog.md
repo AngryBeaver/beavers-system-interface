@@ -1,3 +1,6 @@
+## 2.1.1
+- allow null values for rolls to indicate rollabort
+
 ## 2.1.0
 - Add: itemSheetReplaceContent?:(app, html,element)=>void;
 
