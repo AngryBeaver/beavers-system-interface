@@ -1,3 +1,6 @@
+## 2.1.2
+- Fix itemChange returning createdItems
+- Fix objectAttributeGet will return fallback value when undefined
 ## 2.1.1
 - allow null values for rolls to indicate rollabort
 
