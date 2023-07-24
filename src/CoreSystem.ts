@@ -337,9 +337,10 @@ export class CoreSystem implements System {
                 }
             }
         }
-        await actor.createEmbeddedDocuments("Item", itemChange.create);
+        const itemCreated = await actor.createEmbeddedDocuments("Item", itemChange.create);
         await actor.updateEmbeddedDocuments("Item", itemChange.update);
         await actor.deleteEmbeddedDocuments("Item", itemChange.merge);
+        itemChange.create = itemCreated;
         return itemChange;
     }
 
@@ -458,7 +459,7 @@ export class CoreSystem implements System {
                 obj = obj[prop]
             }
             if(obj === undefined){
-                return undefined;
+                return fallback;
             }
         }
         return obj;
