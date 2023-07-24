@@ -17,7 +17,10 @@ Beavers System Interface: Is an interface with some default implementations for 
 BSA-X: Beavers System Adapter for System x is an implementation of Beavers System Interface for System X.
 
 The intention is that BSA-X implementations are kept small and simple, while complex algorithm are implemented within
-BSI,
+BSI.
+
+[Supported systems](https://github.com/AngryBeaver/beavers-system-interface/wiki/BSA-x-links) 
+
 ## Main Functionality v1
 - configurations e.g. list of skills,abilities,currencies
 - adjust Currencies
