@@ -39,6 +39,15 @@
     line-height: 30px;
 }
 
+.simple-ui .dropdown .fa-caret-up {
+    float: right;
+    line-height: 20px;
+    padding: 0 4px;
+}
+.simple-ui .dropdown.l .fa-caret-up {
+    line-height: 30px;
+}
+
 .simple-ui .dropdown .default-text {
     padding-left: 6px;
 }

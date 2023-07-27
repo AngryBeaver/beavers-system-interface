@@ -43,7 +43,7 @@ export class BeaversSelection extends HTMLElement {
         this.dropDown = $(this).find('.dropdown');
         $(this).find('input').on('input', () => this.onInput());
         if(disabled == undefined ) {
-            $(this).find('.default-text').on('click', () => this.toggleDropdown());
+            $(this).find('.default-text, .dropdown>i' ).on('click', () => this.toggleDropdown());
             $(this).find('.option').on('mouseover', (event) => this.hoverOption(event));
             $(this).find('.option').on('click', (event) => this.clickOption(event));
         }
@@ -108,6 +108,7 @@ export class BeaversSelection extends HTMLElement {
         const input = $(this).find('input');
         input.val(val);
         input.trigger('input');
+        input.trigger('change');
     }
 
     onInput() {

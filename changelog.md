@@ -1,3 +1,5 @@
+## 2.1.3
+- Fix submitting event "change" on beavers-selection
 ## 2.1.2
 - Fix itemChange returning createdItems
 - Fix objectAttributeGet will return fallback value when undefined
