@@ -6,6 +6,10 @@
     "RemainingQuantityLessThenZero": "not enough ",
     "NotEnoughMoney": "not enough money",
     "DocumentNotFound": "document not found for :",
+    "SystemAdaptionNeeded": "You can not execute this method without an active System Adaption Module.",
+    "SystemAdaptionNeededAdditional": "You need to register your module on beavers system interface if you want access those methods without error",
+    "NoModulesRegistered": "There is no module registered that requires beavers-system-interface.",
+    "NoImplementationRegistered": "There is no system specific adaption module available, only some methods will work in this mode.",
     "select-dialog": {
       "title": "Selection",
       "preselection": "choose"

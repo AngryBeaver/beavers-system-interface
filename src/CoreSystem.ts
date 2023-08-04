@@ -1,5 +1,6 @@
 import {NAMESPACE} from "./main.js";
 import {SelectDialog} from "./apps/SelectDialog.js";
+import {TokenMovement} from "./classes/TokenMovement.js";
 
 export class CoreSystem implements System {
     _version: number =  2
@@ -13,6 +14,12 @@ export class CoreSystem implements System {
             ui.notifications.error("Beavers System Interface | missing module BSA - " + game.system.id + " <a href='https://github.com/AngryBeaver/beavers-system-interface/wiki/BSA-x-links'>module links</a>",{permanent:true});
             console.error("The following modules will not work", this._modules);
             throw Error(game['i18n'].localize("beaversSystemInterface.SystemNotFound"));
+        }
+        if(this._modules.length === 0){
+            console.warn(game['i18n'].localize("beaversSystemInterface.NoModulesRegistered"))
+        }
+        if(this._implementation === undefined){
+            console.warn(game['i18n'].localize("beaversSystemInterface.NoImplementationRegistered"))
         }
     }
 
@@ -28,17 +35,17 @@ export class CoreSystem implements System {
     async init(){
         if (this._implementation?.init !== undefined) {
             await this._implementation.init();
-        }
-        const configCurrencies = beaversSystemInterface.configCurrencies;
-        for(const currency of configCurrencies){
-            if(currency.uuid != undefined){
-                const currencyItem = await beaversSystemInterface.uuidToDocument(currency.uuid);
-                currency.component = beaversSystemInterface.componentFromEntity(currencyItem);
-            }else{
-                return;
+            const configCurrencies = beaversSystemInterface.configCurrencies;
+            for(const currency of configCurrencies){
+                if(currency.uuid != undefined){
+                    const currencyItem = await beaversSystemInterface.uuidToDocument(currency.uuid);
+                    currency.component = beaversSystemInterface.componentFromEntity(currencyItem);
+                }else{
+                    return;
+                }
             }
+            this._configCurrencies = configCurrencies;
         }
-        this._configCurrencies = configCurrencies;
     }
 
     get id(): string {
@@ -49,7 +56,10 @@ export class CoreSystem implements System {
         return this._implementation.version;
     }
 
+
+
     get configSkills(): SkillConfig[] {
+        this._checkImplementation();
         if (this._implementation?.configSkills !== undefined) {
             return this._implementation.configSkills;
         } else {
@@ -58,6 +68,7 @@ export class CoreSystem implements System {
     }
 
     get configAbilities(): AbilityConfig[] {
+        this._checkImplementation();
         if (this._implementation?.configAbilities !== undefined) {
             return this._implementation.configAbilities;
         } else {
@@ -72,11 +83,13 @@ export class CoreSystem implements System {
         if (this._implementation?.configCurrencies !== undefined) {
             return this._implementation.configCurrencies;
         } else {
+            this._checkImplementation();
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configCurrencies');
         }
     }
 
     get configCanRollAbility(): boolean {
+        this._checkImplementation();
         if (this._implementation?.configCanRollAbility !== undefined) {
             return this._implementation.configCanRollAbility;
         } else {
@@ -85,6 +98,7 @@ export class CoreSystem implements System {
     }
 
     get configLootItemType(): string {
+        this._checkImplementation();
         if (this._implementation?.configLootItemType !== undefined) {
             return this._implementation.configLootItemType;
         } else {
@@ -119,6 +133,7 @@ export class CoreSystem implements System {
     }
 
     actorRollAbility(actor, abilityId: string): Promise<Roll|null> {
+        this._checkImplementation();
         if (this._implementation?.actorRollAbility !== undefined) {
             return this._implementation.actorRollAbility(actor, abilityId);
         } else {
@@ -127,6 +142,7 @@ export class CoreSystem implements System {
     }
 
     actorRollSkill(actor, skillId: string): Promise<Roll|null> {
+        this._checkImplementation();
         if (this._implementation?.actorRollSkill !== undefined) {
             return this._implementation.actorRollSkill(actor, skillId);
         } else {
@@ -135,6 +151,7 @@ export class CoreSystem implements System {
     }
 
     actorRollTool(actor, item): Promise<Roll|null> {
+        this._checkImplementation();
         if (this._implementation?.actorRollTool !== undefined) {
             return this._implementation.actorRollTool(actor, item);
         } else {
@@ -147,6 +164,7 @@ export class CoreSystem implements System {
             return this._implementation.actorCurrenciesGet(actor);
         } else {
             if(this._configCurrencies===undefined){
+                this._checkImplementation();
                 throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorGetCurrencies');
             }
             return this._actorCurrenciesGet(actor);
@@ -253,6 +271,7 @@ export class CoreSystem implements System {
     }
 
     actorSheetAddTab(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody:string): void {
+        this._checkImplementation();
         if (this._implementation?.actorSheetAddTab !== undefined) {
             return this._implementation.actorSheetAddTab(sheet, html, actor, tabData, tabBody);
         } else {
@@ -436,6 +455,7 @@ export class CoreSystem implements System {
     }
 
     get itemQuantityAttribute(): string {
+        this._checkImplementation();
         if (this._implementation?.itemQuantityAttribute !== undefined) {
             return this._implementation.itemQuantityAttribute;
         } else {
@@ -444,8 +464,9 @@ export class CoreSystem implements System {
     }
 
     get itemPriceAttribute(): string {
-        if (this._implementation?.itemQuantityAttribute !== undefined) {
-            return this._implementation.itemQuantityAttribute;
+        this._checkImplementation();
+        if (this._implementation?.itemPriceAttribute !== undefined) {
+            return this._implementation.itemPriceAttribute;
         } else {
             throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'itemQuantityAttribute');
         }
@@ -481,8 +502,19 @@ export class CoreSystem implements System {
         }
     }
 
+    tokenMovementCreate(actorId:string){
+        return new TokenMovement(actorId);
+    }
+
     async uiDialogSelect(data: SelectData):Promise<string> {
         return SelectDialog.promise(data);
+    }
+
+    private _checkImplementation() {
+        if (this._implementation === undefined) {
+            console.warn(game['i18n'].localize("beaversSystemInterface.SystemAdaptionNeededAddition"))
+            throw Error(game['i18n'].localize("beaversSystemInterface.SystemAdaptionNeeded"));
+        }
     }
 
 }
