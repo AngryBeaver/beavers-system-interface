@@ -1,5 +1,8 @@
 ## 2.1.4
 - Add Beavers Token Movement smoothly move tokens while still snapping to grid.
+
+Beavers Token Movement will also register as GamepadModule to beavers-gamepads.
+
 ## 2.1.3
 - Fix submitting event "change" on beavers-selection
 ## 2.1.2

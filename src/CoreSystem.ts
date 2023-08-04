@@ -1,4 +1,3 @@
-import {NAMESPACE} from "./main.js";
 import {SelectDialog} from "./apps/SelectDialog.js";
 import {TokenMovement} from "./classes/TokenMovement.js";
 
