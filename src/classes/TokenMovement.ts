@@ -39,6 +39,7 @@ export class TokenMovement implements TokenMovementInstance{
         size:number
     }
     hook?:number
+    consecutiveTicks:number=0;
 
     constructor(actorId:string){
         this.actorId = actorId;
@@ -59,14 +60,26 @@ export class TokenMovement implements TokenMovementInstance{
     }
 
     public tick(event: GamepadTickEvent):boolean{
-        if(event.hasAnyAxesTicked && this.actorId !== ""){
+        console.log(this.consecutiveTicks);
+        if(!event.hasAnyAxesTicked){
+            this._reduceConsecutiveTicks();
+            return true;
+        }
+        if(this.actorId !== ""){
             let x = 0;
             let y = 0;
             for(const [i,value] of Object.entries(event.axes)){
                 x = x || this._get(this.X_AXES,i,value);
                 y = y || this._get(this.Y_AXES,i,value);
             }
-            this.move(x,y)
+            if(x == 0 && y == 0){
+                this._reduceConsecutiveTicks();
+            }else{
+                this.consecutiveTicks++;
+                if(this.consecutiveTicks>4 || this.consecutiveTicks==1){
+                    this.move(x,y)
+                }
+            }
         }
         return true;
     }
@@ -109,6 +122,14 @@ export class TokenMovement implements TokenMovementInstance{
                     }
                 })
             }
+        }
+    }
+
+    private _reduceConsecutiveTicks(){
+        if(this.consecutiveTicks>5){
+            this.consecutiveTicks = 5;
+        }else {
+            this.consecutiveTicks = 0;
         }
     }
 
