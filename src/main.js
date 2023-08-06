@@ -1,6 +1,7 @@
 import {CoreSystem} from "./CoreSystem.js";
 import {BeaversSelection} from "./elements/BeaversSelection.js";
 import {Settings} from "./Settings.js";
+import {TokenMovement} from "./classes/TokenMovement.js";
 
 export const NAMESPACE = "beavers-system-interface";
 
@@ -19,3 +20,6 @@ Hooks.on("ready",async function () {
     Hooks.call("beavers-system-interface.ready");
 });
 
+Hooks.on("beavers-gamepad.ready", async function(manager){
+    manager.registerGamepadModule(TokenMovement);
+})

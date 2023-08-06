@@ -42,6 +42,7 @@ interface System extends SystemApi {
     objectAttributeGet:(obj:any, attribute:string, fallback?:any)=>any,
     objectAttributeSet:(obj:any, attribute:string, value)=>void,
     itemListComponentFind:(itemList,component: ComponentData)=>{components:Component[],quantity:number},
+    tokenMovementCreate:(actorId:string)=>TokenMovementInstance,
     uiDialogSelect:(data: SelectData)=>Promise<string>
 }
 
@@ -110,4 +111,59 @@ interface ItemChange {
     update: any[],
     merge: string[],
     delete: ComponentData[]
+}
+
+interface TokenMovementInstance {
+    move:(x:number,y:number)=>void
+}
+
+
+/**
+ * GamepadModule as of beavers-gamepad
+ */
+interface GamepadModule{
+    new(actorId:string):GamepadModuleInstance;
+    defaultConfig:GamepadModuleConfig;
+}
+
+
+interface GamepadModuleInstance {
+    initialize:(actorId:string,config: GamepadModuleConfigBinding)=>void
+    getConfig:()=> GamepadModuleConfig
+    tick:(GamepadTickEvent)=>boolean
+    destroy:()=>void
+}
+
+interface GamepadModuleConfig {
+    id: string
+    name: string
+    binding:GamepadModuleConfigBinding
+}
+
+interface GamepadModuleConfigBinding {
+    axes:{
+        [name:string]:{
+            index:string
+            reversed: boolean
+        }
+    }
+    buttons:{
+        [name:string]:{
+            index:string
+        }
+    }
+}
+
+interface GamepadTickEvent {
+    gamepad:Gamepad,
+    hasAnyButtonTicked:boolean,
+    hasAnyAxesTicked:boolean,
+    isAnyButtonPressed:boolean,
+    hasAnyAxesActivity:boolean,
+    axes: {
+        [key: string]: number
+    }
+    buttons: {
+        [key: string]: number
+    }
 }
