@@ -502,7 +502,9 @@ export class CoreSystem implements System {
     }
 
     tokenMovementCreate(actorId:string){
-        return new TokenMovement(actorId);
+        const tokenMovement = new TokenMovement();
+        tokenMovement.initialize(actorId);
+        return tokenMovement;
     }
 
     async uiDialogSelect(data: SelectData):Promise<string> {

@@ -3,8 +3,10 @@
 	"title": "Beaver's System Interface",
 	"version": "2.1.4",
 	"description": "Beaver's System Interface",
-	"devDir": "C:\\Users\\Riess\\AppData\\Local\\FoundryVTT\\Data\\modules",
+	"#devDir": "C:\\Users\\Riess\\AppData\\Local\\FoundryVTT\\Data\\modules",
 	"#devDir": "C:\\data\\Data\\modules",
+	"devDir": "D:\\Vtts\\v10\\Data\\modules",
+	"#devDir": "D:\\Vtts\\v11\\Data\\modules",
 	"main": "src/main.js",
 	"scripts": {
 		"type": "npx -p typescript tsc src/types.ts --declaration --emitDeclarationOnly --outDir dist/src",

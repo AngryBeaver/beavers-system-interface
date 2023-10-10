@@ -117,21 +117,28 @@ interface TokenMovementInstance {
     move:(x:number,y:number)=>void
 }
 
-
 /**
  * GamepadModule as of beavers-gamepad
  */
 interface GamepadModule{
-    new(actorId:string):GamepadModuleInstance;
+    new():GamepadModuleInstance;
     defaultConfig:GamepadModuleConfig;
 }
 
 
 interface GamepadModuleInstance {
-    initialize:(actorId:string,config: GamepadModuleConfigBinding)=>void
-    getConfig:()=> GamepadModuleConfig
+    updateGamepadConfig:(gamepadConfig:GamepadConfig)=>void
     tick:(GamepadTickEvent)=>boolean
     destroy:()=>void
+}
+
+interface GamepadConfig {
+    userId?:string,
+    gamepadId:string,
+    actorId:string,
+    modules:{
+        [key:string]: GamepadModuleConfig
+    }
 }
 
 interface GamepadModuleConfig {

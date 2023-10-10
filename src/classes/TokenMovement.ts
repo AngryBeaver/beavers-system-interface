@@ -29,8 +29,9 @@ export class TokenMovement implements TokenMovementInstance{
     private Y_AXES = "Move-vertical";
     private UPDATE_TOKEN_HOOK = "updateToken";
 
-    config:GamepadModuleConfig
-    actorId: string
+    config:GamepadModuleConfig;
+    actorId: string;
+    gamepadConfig: GamepadConfig;
     isMoving:boolean = false;
     token?:Token;
     position?:{
@@ -38,29 +39,26 @@ export class TokenMovement implements TokenMovementInstance{
         point:any,
         size:number
     }
+    userData:any;
     hook?:number
     consecutiveTicks:number=0;
 
-    constructor(actorId:string){
+    public initialize(actorId:string){
         this.actorId = actorId;
-        this.config = TokenMovement.defaultConfig;
-    }
-
-    public initialize(actorId:string, config: GamepadModuleConfigBinding){
-        this.actorId = actorId;
-        this.config.binding = config;
         if(this.hook){
             Hooks.off(this.UPDATE_TOKEN_HOOK,this.hook);
         }
         this.hook = Hooks.on(this.UPDATE_TOKEN_HOOK,this._tokenGotUpdated.bind(this));
     }
 
-    public getConfig(): GamepadModuleConfig{
-        return this.config;
+    public updateGamepadConfig(gamepadConfig: GamepadConfig){
+        this.config = TokenMovement.defaultConfig;
+        this.config.binding = gamepadConfig.modules[this.config.id].binding;
+        this.userData = game["beavers-gamepad"].Settings.getUserData(gamepadConfig.userId);
+        this.initialize(gamepadConfig.actorId);
     }
 
     public tick(event: GamepadTickEvent):boolean{
-        console.log(this.consecutiveTicks);
         if(!event.hasAnyAxesTicked){
             this._reduceConsecutiveTicks();
             return true;
@@ -71,6 +69,11 @@ export class TokenMovement implements TokenMovementInstance{
             for(const [i,value] of Object.entries(event.axes)){
                 x = x || this._get(this.X_AXES,i,value);
                 y = y || this._get(this.Y_AXES,i,value);
+            }
+            if(this.userData.userPosition==="right" || this.userData.userPosition==="left"){
+                const y2 = y;
+                y = x;
+                x = y2*-1;
             }
             if(x == 0 && y == 0){
                 this._reduceConsecutiveTicks();
@@ -151,12 +154,15 @@ export class TokenMovement implements TokenMovementInstance{
                 result = value;
             }
         }
+        if(this.userData.userPosition==="top" || this.userData.userPosition==="right"){
+            result = result*-1;
+        }
         return result;
     }
 
     private _getToken():Token {
         // @ts-ignore
-        const token:Token = canvas.tokens?.objects?.children.find(token => this.actorId.endsWith(token?.actor?.uuid) );
+        const token:Token = canvas.tokens?.objects?.children.find(token => this.gamepadConfig.actorId.endsWith(token?.actor?.uuid) );
         if(token.id !== this.token?.id) {
             this.position = undefined;
         }
