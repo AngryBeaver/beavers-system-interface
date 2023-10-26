@@ -1,6 +1,6 @@
 ## 2.1.5
 - refactor gamepad types to new beavers-gamepad npm package,
-- update tokenMovementGamepadModule to beavers gamepad 1.1.0
+- update tokenMovementGamepadModule to beavers gamepad 2.0.0
 - fix sensitivity for tokenMovementGamepadModule reduces possibility ot accidentally move diagonally.
 ## 2.1.4
 - Add Beavers Token Movement smoothly move tokens while still snapping to grid.
