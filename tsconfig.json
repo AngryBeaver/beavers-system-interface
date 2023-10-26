@@ -65,6 +65,7 @@
     ],
     /* List of folders to include type definitions from. */
     "types": [
+      "beavers-gamepad/src",
       "@league-of-foundry-developers/foundry-vtt-types",
       "@ethaks/fvtt-quench"
     ],
