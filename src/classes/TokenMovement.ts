@@ -22,7 +22,8 @@ export class TokenMovement implements TokenMovementInstance{
             buttons:{}
         },
         name: "Beaver's Token Movement",
-        id:"beavers-token-movement"
+        id:"beavers-token-movement",
+        desc: "beaversSystemInterface.TokenMovement.desc"
     }
 
     private X_AXES = "Move-horizontal";
@@ -31,7 +32,6 @@ export class TokenMovement implements TokenMovementInstance{
 
     config:GamepadModuleConfig;
     actorId: string;
-    gamepadConfig: GamepadConfig;
     isMoving:boolean = false;
     token?:Token;
     position?:{
@@ -51,11 +51,18 @@ export class TokenMovement implements TokenMovementInstance{
         this.hook = Hooks.on(this.UPDATE_TOKEN_HOOK,this._tokenGotUpdated.bind(this));
     }
 
+    public getConfig():GamepadModuleConfig{
+        return this.config;
+    }
+
     public updateGamepadConfig(gamepadConfig: GamepadConfig){
         this.config = TokenMovement.defaultConfig;
         this.config.binding = gamepadConfig.modules[this.config.id].binding;
+        const user = (game as Game).users?.find(u=>u.id === gamepadConfig.userId);
         this.userData = game["beavers-gamepad"].Settings.getUserData(gamepadConfig.userId);
-        this.initialize(gamepadConfig.actorId);
+        if(user?.character?.id) {
+            this.initialize(user.character.uuid);
+        }
     }
 
     public tick(event: GamepadTickEvent):boolean{
@@ -162,7 +169,7 @@ export class TokenMovement implements TokenMovementInstance{
 
     private _getToken():Token {
         // @ts-ignore
-        const token:Token = canvas.tokens?.objects?.children.find(token => this.gamepadConfig.actorId.endsWith(token?.actor?.uuid) );
+        const token:Token = canvas.tokens?.objects?.children.find(token => this.actorId.endsWith(token?.actor?.uuid) );
         if(token.id !== this.token?.id) {
             this.position = undefined;
         }

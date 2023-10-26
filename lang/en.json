@@ -19,6 +19,9 @@
         "hint": "beavers selection is a custom design for select boxes which can hold images. As it is not the native implementation it might break on some browser, if so you can disable it here",
         "name": "enable beavers selection"
       }
+    },
+    "TokenMovement": {
+      "desc": "this module allows to control the movement of a token"
     }
   }
 }

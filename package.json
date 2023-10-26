@@ -1,7 +1,7 @@
 {
 	"name": "beavers-system-interface",
 	"title": "Beaver's System Interface",
-	"version": "2.1.4",
+	"version": "2.1.5",
 	"description": "Beaver's System Interface",
 	"#devDir": "C:\\Users\\Riess\\AppData\\Local\\FoundryVTT\\Data\\modules",
 	"#devDir": "C:\\data\\Data\\modules",
@@ -27,6 +27,7 @@
 		"printWidth": 120
 	},
 	"devDependencies": {
+		"beavers-gamepad": "^1.1.0",
 		"@ethaks/fvtt-quench": "^0.6.0",
 		"@league-of-foundry-developers/foundry-vtt-types": "^0.8.8-9",
 		"@types/jest": "^27.4.1",
