@@ -1,3 +1,4 @@
+import { Settings } from "./Settings.js";
 import {SelectDialog} from "./apps/SelectDialog.js";
 import {TokenMovement} from "./classes/TokenMovement.js";
 
@@ -287,7 +288,7 @@ export class CoreSystem implements System {
         }
     }
 
-    itemListComponentFind(itemList,component: ComponentData):{components:Component[],quantity:number} {
+    itemListComponentFind(itemList,component: ComponentData, isACraftingResult = false):{components:Component[],quantity:number} {
         const result = {
             quantity:0,
             components:[] as Component[]
@@ -295,8 +296,18 @@ export class CoreSystem implements System {
         itemList.forEach((i) => {
             const componentItem = beaversSystemInterface.componentFromEntity(i);
             if (componentItem.isSame(component)) {
-                result.components.push(componentItem);
-                result.quantity = result.quantity + componentItem.quantity;
+                // CHECK IF THE COMPONENTS HAVE THE SAME FLAGS OF THE MODULE BEAVER CRAFTING
+                // FOR AVOID TO MERGE CRAFTED ITEM WITH NON-CRAFTED ITEM BY QUANTITY
+                if(isACraftingResult) {
+                    const hasSameFlagsBeaverCrafting = this._componentHasSameFlagsBeaversCrafting(componentItem,component);
+                    if(hasSameFlagsBeaverCrafting) {
+                        result.components.push(componentItem);
+                        result.quantity = result.quantity + componentItem.quantity;
+                    }
+                } else {
+                    result.components.push(componentItem);
+                    result.quantity = result.quantity + componentItem.quantity;
+                }
             }
         });
         return result;
@@ -326,7 +337,7 @@ export class CoreSystem implements System {
             delete: []
         }
         for (const component of uniqueComponents) {
-            const actorFindings = beaversSystemInterface.itemListComponentFind(actor.items,component);
+            const actorFindings = beaversSystemInterface.itemListComponentFind(actor.items,component, true);
             if(actorFindings.quantity != 0){
                 component.quantity = component.quantity + actorFindings.quantity;
                 if (component.quantity < 0) {
@@ -429,6 +440,13 @@ export class CoreSystem implements System {
             const isSameItemType = a.itemType === b.itemType;
             return isSameName && isSameType && isSameItemType;
         }
+    }
+
+    _componentHasSameFlagsBeaversCrafting(a: ComponentData, b: ComponentData): boolean {
+        const flagsA = foundry.utils.getProperty(`flags.beavers-crafting`) ?? {};
+        const flagsB = foundry.utils.getProperty(`flags.beavers-crafting`) ?? {};
+        const isSameFlags = foundry.utils.objectsEqual(flagsA, flagsB);
+        return isSameFlags;
     }
 
     componentFromEntity(entity: any, hasJsonData: boolean = false): Component {

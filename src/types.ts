@@ -41,7 +41,7 @@ interface System extends SystemApi {
     currenciesSum:(source: Currencies, add: Currencies, doExchange:boolean)=>Currencies
     objectAttributeGet:(obj:any, attribute:string, fallback?:any)=>any,
     objectAttributeSet:(obj:any, attribute:string, value)=>void,
-    itemListComponentFind:(itemList,component: ComponentData)=>{components:Component[],quantity:number},
+    itemListComponentFind:(itemList,component: ComponentData, isACraftingResult?:boolean)=>{components:Component[],quantity:number},
     tokenMovementCreate:(actorId:string)=>TokenMovementInstance,
     uiDialogSelect:(data: SelectData)=>Promise<string>
 }
