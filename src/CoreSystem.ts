@@ -4,6 +4,7 @@ import {TokenMovement} from "./classes/TokenMovement.js";
 export class CoreSystem implements System {
     _version: number =  2
     _implementation: SystemApi;
+    _extensions: {moduleName:Partial<Extension>};
     _modules: string[] = [];
     _configCurrencies:CurrencyConfig[];
 
@@ -31,6 +32,10 @@ export class CoreSystem implements System {
             this._implementation = implementation;
         }
     }
+    addExtension(moduleName:string,extension:Partial<Extension>){
+        this._extensions[moduleName]=extension;
+    }
+
     async init(){
         if (this._implementation?.init !== undefined) {
             await this._implementation.init();
@@ -404,10 +409,11 @@ export class CoreSystem implements System {
     }
 
     get componentDefaultData(): ComponentData {
+        let data:ComponentData;
         if (this._implementation?.componentDefaultData !== undefined) {
-            return this._implementation.componentDefaultData;
+            data = this._implementation.componentDefaultData;
         } else {
-            return {
+            data = {
                 id: "invalid",
                 uuid: "invalid",
                 img: "invalid",
@@ -415,29 +421,43 @@ export class CoreSystem implements System {
                 name: "invalid",
                 quantity: 1,
                 itemType: undefined,
-                jsonData: undefined
+                jsonData: undefined,
             }
         }
+        Object.values(this._extensions).forEach(ext=>{
+            if(ext.componentDefaultData){
+                data = ext.componentDefaultData(data);
+            }
+        });
+        return data;
     }
 
     componentIsSame(a: ComponentData, b: ComponentData): boolean {
+        let result:boolean;
         if (this._implementation?.componentIsSame !== undefined) {
-            return this._implementation.componentIsSame(a, b);
+            result = this._implementation.componentIsSame(a, b);
         } else {
             const isSameName = a.name === b.name;
             const isSameType = a.type === b.type;
             const isSameItemType = a.itemType === b.itemType;
-            return isSameName && isSameType && isSameItemType;
+            result = isSameName && isSameType && isSameItemType;
         }
+        Object.values(this._extensions).forEach(ext=>{
+            if(ext.componentIsSame){
+                result = ext.componentIsSame(a,b,result);
+            }
+        });
+        return result;
     }
 
     componentFromEntity(entity: any, hasJsonData: boolean = false): Component {
+        let result:Component;
         if (this._implementation?.componentFromEntity !== undefined) {
             if(this._implementation.version < 2){
                 ui.notifications?.error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
                 throw Error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
             }
-            return this._implementation.componentFromEntity(entity,hasJsonData);
+            result = this._implementation.componentFromEntity(entity,hasJsonData);
         } else {
             const data = {
                 id: entity.id,
@@ -449,8 +469,14 @@ export class CoreSystem implements System {
                 itemType: entity.documentName === "Item" ? entity.type : undefined,
                 jsonData: hasJsonData? entity.toObject() : undefined
             }
-            return beaversSystemInterface.componentCreate(data);
+            result =  beaversSystemInterface.componentCreate(data);
         }
+        Object.values(this._extensions).forEach(ext=>{
+            if(ext.componentFromEntity){
+                result = ext.componentFromEntity(entity, result);
+            }
+        });
+        return result;
     }
 
     get itemQuantityAttribute(): string {
@@ -517,5 +543,4 @@ export class CoreSystem implements System {
             throw Error(game['i18n'].localize("beaversSystemInterface.SystemAdaptionNeeded"));
         }
     }
-
 }
