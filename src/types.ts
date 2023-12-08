@@ -1,9 +1,3 @@
-interface Extension {
-    componentIsSame:(a: ComponentData,b: ComponentData, previousResult: boolean)=>boolean,
-    componentFromEntity:(entity: any, previousResult: Component) => Component,
-    componentDefaultData: (ComponentData) => ComponentData,
-}
-
 interface SystemApi {
     version: number;
     id: string;
@@ -51,7 +45,6 @@ interface System extends SystemApi {
     tokenMovementCreate:(actorId:string)=>TokenMovementInstance,
     uiDialogSelect:(data: SelectData)=>Promise<string>
 }
-
 
 interface SelectData {
     choices:{

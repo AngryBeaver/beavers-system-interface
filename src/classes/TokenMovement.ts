@@ -198,6 +198,7 @@ export class TokenMovement implements TokenMovementInstance{
         return this.position;
     }
 
+
     private _checkSceneCollision(collisionPoint) {
         if (!(canvas instanceof Canvas)) {
             throw new Error("TokenMovement called before canvas has been initialized");
@@ -209,5 +210,8 @@ export class TokenMovement implements TokenMovementInstance{
             && collisionPoint.y < canvas.dimensions?.sceneY
             && collisionPoint.y > 0);
     }
+
+
+
 
 }
