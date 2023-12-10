@@ -288,13 +288,14 @@ export class CoreSystem implements System {
     }
 
     itemListComponentFind(itemList,component: ComponentData):{components:Component[],quantity:number} {
+        const resultComponent = beaversSystemInterface.componentCreate(component);
         const result = {
             quantity:0,
             components:[] as Component[]
         }
         itemList.forEach((i) => {
             const componentItem = beaversSystemInterface.componentFromEntity(i);
-            if (componentItem.isSame(component)) {
+            if (resultComponent.isSame(componentItem)) {
                 result.components.push(componentItem);
                 result.quantity = result.quantity + componentItem.quantity;
             }
