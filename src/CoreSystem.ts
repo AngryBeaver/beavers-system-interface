@@ -260,7 +260,7 @@ export class CoreSystem implements System {
                 throw new Error("currency" +key+ " not valid");
             }
             const item = await beaversSystemInterface.uuidToDocument(configCurrency.uuid);
-            const itemData = item.toObject();
+            const itemData = item.toObject(false);
             this.objectAttributeSet(itemData,beaversSystemInterface.itemQuantityAttribute,value);
             if(value as number > 0) {
                 createItems.push(itemData);
@@ -348,7 +348,7 @@ export class CoreSystem implements System {
                 }
                 if (actorFindings.components[0]){
                     const entity = await actorFindings.components[0].getEntity();
-                    component.jsonData = entity.toObject()
+                    component.jsonData = entity.toObject(false)
                     itemChange.delete.push(component);
                 }
                 itemChange.merge.push(...actorFindings.components.map(c => c.id));
@@ -358,7 +358,7 @@ export class CoreSystem implements System {
                 }
                 if(component.quantity !=0) {
                     const entity = await component.getEntity();
-                    const data = entity.toObject();
+                    const data = entity.toObject(false);
                     this.objectAttributeSet(data, beaversSystemInterface.itemQuantityAttribute, component.quantity);
                     itemChange.create.push(data)
                 }
@@ -476,7 +476,7 @@ export class CoreSystem implements System {
                 type : entity.documentName,
                 quantity: this.objectAttributeGet(entity,beaversSystemInterface.itemQuantityAttribute,1),
                 itemType: entity.documentName === "Item" ? entity.type : undefined,
-                jsonData: hasJsonData? entity.toObject() : undefined
+                jsonData: hasJsonData? entity.toObject(false) : undefined
             }
             result =  beaversSystemInterface.componentCreate(data);
         }
