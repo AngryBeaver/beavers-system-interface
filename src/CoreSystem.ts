@@ -6,6 +6,7 @@ export class CoreSystem implements System {
     _implementation: SystemApi;
     _modules: string[] = [];
     _configCurrencies:CurrencyConfig[];
+    _extensions: {[moduleName:string]:Partial<Extension>} = {};
 
     checkValidity() {
         if (this._modules.length > 0 && this._implementation === undefined) {
@@ -24,6 +25,13 @@ export class CoreSystem implements System {
 
     addModule(name: string) {
         this._modules.push(name)
+    }
+
+    addExtension(moduleName:string,extension:Partial<Extension>){
+        this._extensions[moduleName]=this._extensions[moduleName] || {};
+        Object.entries(extension).forEach(([key,value])=>{
+            this._extensions[moduleName][key]=value;
+        })
     }
 
     register(implementation) {
@@ -388,15 +396,18 @@ export class CoreSystem implements System {
     componentCreate(data: any): Component {
         const result = mergeObject(this.componentDefaultData, data, {insertKeys: false});
         result.getEntity = async () => {
+            let item;
             if (result.jsonData) {
                 if (result.type === "Item") {
-                    return Item["fromSource"](result.jsonData);
+                    item = await Item["fromSource"](result.jsonData);
                 }
                 if (result.type === "RollTable") {
-                    return RollTable["fromSource"](result.jsonData);
+                    item = await RollTable["fromSource"](result.jsonData);
                 }
             }
-            return beaversSystemInterface.uuidToDocument(result.uuid);
+            if(!item) item = await beaversSystemInterface.uuidToDocument(result.uuid);
+            item.flags = mergeObject(item.flags,result.flags,{insertKeys:true})
+            return item
         }
         result.isSame = (component: ComponentData) => {
             return beaversSystemInterface.componentIsSame(result, component);
@@ -405,10 +416,11 @@ export class CoreSystem implements System {
     }
 
     get componentDefaultData(): ComponentData {
+        let data:ComponentData;
         if (this._implementation?.componentDefaultData !== undefined) {
-            return this._implementation.componentDefaultData;
+            data = this._implementation.componentDefaultData;
         } else {
-            return {
+            data = {
                 id: "invalid",
                 uuid: "invalid",
                 img: "invalid",
@@ -416,29 +428,45 @@ export class CoreSystem implements System {
                 name: "invalid",
                 quantity: 1,
                 itemType: undefined,
-                jsonData: undefined
+                jsonData: undefined,
             }
         }
+        Object.entries(this._extensions).forEach(([moduleId,ext])=>{
+            if(ext.componentAddFlags){
+                ext.componentAddFlags.forEach((flag)=>{
+                    setProperty(data,`flags.${moduleId}.${flag}`,undefined);
+                });
+            }
+        });
+        return data;
     }
 
     componentIsSame(a: ComponentData, b: ComponentData): boolean {
+        let result:boolean;
         if (this._implementation?.componentIsSame !== undefined) {
-            return this._implementation.componentIsSame(a, b);
+            result = this._implementation.componentIsSame(a, b);
         } else {
             const isSameName = a.name === b.name;
             const isSameType = a.type === b.type;
             const isSameItemType = a.itemType === b.itemType;
-            return isSameName && isSameType && isSameItemType;
+            result = isSameName && isSameType && isSameItemType;
         }
+        Object.values(this._extensions).forEach(ext=>{
+            if(ext.componentIsSame){
+                result = ext.componentIsSame(a,b,result);
+            }
+        });
+        return result;
     }
 
     componentFromEntity(entity: any, hasJsonData: boolean = false): Component {
+        let result:Component;
         if (this._implementation?.componentFromEntity !== undefined) {
             if(this._implementation.version < 2){
                 ui.notifications?.error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
                 throw Error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
             }
-            return this._implementation.componentFromEntity(entity,hasJsonData);
+            result = this._implementation.componentFromEntity(entity,hasJsonData);
         } else {
             const data = {
                 id: entity.id,
@@ -450,8 +478,17 @@ export class CoreSystem implements System {
                 itemType: entity.documentName === "Item" ? entity.type : undefined,
                 jsonData: hasJsonData? entity.toObject() : undefined
             }
-            return beaversSystemInterface.componentCreate(data);
+            result =  beaversSystemInterface.componentCreate(data);
         }
+        Object.entries(this._extensions).forEach(([moduleId,ext])=>{
+            if(ext.componentAddFlags){
+                ext.componentAddFlags.forEach((flag)=>{
+                    const property = getProperty(entity,`flags.${moduleId}.${flag}`);
+                    setProperty(result,`flags.${moduleId}.${flag}`,property);
+                });
+            }
+        });
+        return result;
     }
 
     get itemQuantityAttribute(): string {

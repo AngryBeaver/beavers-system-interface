@@ -46,6 +46,11 @@ interface System extends SystemApi {
     uiDialogSelect:(data: SelectData)=>Promise<string>
 }
 
+interface Extension {
+    componentIsSame:(a: ComponentData,b: ComponentData, previousResult: boolean)=>boolean,
+    componentAddFlags:string[],
+}
+
 interface SelectData {
     choices:{
         [id:string]:{     //id of your choice
@@ -79,6 +84,7 @@ interface ComponentData {
     quantity: number;
     itemType?: string;      //if it is of type item there is an itemType
     jsonData?: string;      //to store a component completly
+    flags?: {[moduleId:string]:any}          //module specific flags
     [key: string]: unknown; //this is system dependent information! do not relay on it. It is only needed for internal behavior e.g. isSame.
 }
 
