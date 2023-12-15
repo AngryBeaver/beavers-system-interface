@@ -260,7 +260,7 @@ export class CoreSystem implements System {
                 throw new Error("currency" +key+ " not valid");
             }
             const item = await beaversSystemInterface.uuidToDocument(configCurrency.uuid);
-            const itemData = item.toObject(false);
+            const itemData = item.toObject();
             this.objectAttributeSet(itemData,beaversSystemInterface.itemQuantityAttribute,value);
             if(value as number > 0) {
                 createItems.push(itemData);
@@ -310,7 +310,7 @@ export class CoreSystem implements System {
         });
         return result;
     }
-
+    //isSame does not mean they are  Equivalent isSame can be not symetrical !
     async actorComponentListAdd(actor, componentList: Component[]): Promise<ItemChange> {
         //unique Components
         const uniqueComponents: Component[] = [];
@@ -318,7 +318,7 @@ export class CoreSystem implements System {
             const result = beaversSystemInterface.componentCreate(component);
             let exists = false;
             uniqueComponents.forEach(uniqueComponent => {
-                if (uniqueComponent.isSame(component)) {
+                if (uniqueComponent.isSame(component) && component.isSame(uniqueComponent)) {
                     exists = true;
                     uniqueComponent.quantity = uniqueComponent.quantity + result.quantity;
                 }
@@ -336,22 +336,56 @@ export class CoreSystem implements System {
         }
         for (const component of uniqueComponents) {
             const actorFindings = beaversSystemInterface.itemListComponentFind(actor.items,component);
-            if(actorFindings.quantity != 0){
-                component.quantity = component.quantity + actorFindings.quantity;
-                if (component.quantity < 0) {
+            if(actorFindings.quantity != 0) {
+                const remainingQuantity = component.quantity + actorFindings.quantity;
+                if (remainingQuantity < 0) {
                     throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
                 }
-                if (component.quantity > 0) {
-                    const update = {_id: actorFindings.components.shift().id};
-                    this.objectAttributeSet(update,beaversSystemInterface.itemQuantityAttribute,component.quantity);
-                    itemChange.update.push(update);
-                }
-                if (actorFindings.components[0]){
-                    const entity = await actorFindings.components[0].getEntity();
-                    component.jsonData = entity.toObject(false)
+                let equivalentQuantity = 0;
+                const equivalentComponent:Component[] = [];
+                const rest:Component[] = [];
+                actorFindings.components.forEach(
+                    c=>{
+                        if(c.isSame(component) && component.isSame(c)){
+                            equivalentQuantity += c.quantity;
+                            equivalentComponent.push(c);
+                        }else{
+                            rest.push(c);
+                        }
+                    }
+                )
+                let remainingEquivalentQuantity = equivalentQuantity+component.quantity;
+                //equivalentComponents are not enough
+                if(remainingEquivalentQuantity<=0){
+                    //remove all equivalentComponents
+                    const entity = await equivalentComponent[0].getEntity();
+                    component.jsonData = entity.toObject()
                     itemChange.delete.push(component);
+                    itemChange.merge.push(...equivalentComponent.map(c=>c.id));
+                    for(const c of rest){
+                        remainingEquivalentQuantity += c.quantity
+                        if(remainingEquivalentQuantity<=0){
+                            const entity = await c.getEntity();
+                            c.jsonData = entity.toObject()
+                            itemChange.delete.push(c);
+                            itemChange.merge.push(c.id);
+                        }
+                        if(remainingEquivalentQuantity>0){
+                            const update = {_id: c.id};
+                            this.objectAttributeSet(update,beaversSystemInterface.itemQuantityAttribute,remainingEquivalentQuantity);
+                            itemChange.update.push(update);
+                            break;
+                        }
+                    }
+                }else { //equivalentComponents are enough update those
+                    const ec =  equivalentComponent.shift();
+                    if(ec) {
+                        const update = {_id: ec.id};
+                        this.objectAttributeSet(update, beaversSystemInterface.itemQuantityAttribute, remainingEquivalentQuantity);
+                        itemChange.update.push(update);
+                        itemChange.merge.push(...equivalentComponent.map(c => c.id));
+                    }
                 }
-                itemChange.merge.push(...actorFindings.components.map(c => c.id));
             } else {
                 if (component.quantity < 0) {
                     throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
@@ -359,6 +393,7 @@ export class CoreSystem implements System {
                 if(component.quantity !=0) {
                     const entity = await component.getEntity();
                     const data = entity.toObject(false);
+                    data.flags = mergeObject(data.flags,component.flags||{},{insertKeys:true})
                     this.objectAttributeSet(data, beaversSystemInterface.itemQuantityAttribute, component.quantity);
                     itemChange.create.push(data)
                 }
@@ -396,18 +431,15 @@ export class CoreSystem implements System {
     componentCreate(data: any): Component {
         const result = mergeObject(this.componentDefaultData, data, {insertKeys: false});
         result.getEntity = async () => {
-            let item;
             if (result.jsonData) {
                 if (result.type === "Item") {
-                    item = await Item["fromSource"](result.jsonData);
+                    return await Item["fromSource"](result.jsonData);
                 }
                 if (result.type === "RollTable") {
-                    item = await RollTable["fromSource"](result.jsonData);
+                    return await RollTable["fromSource"](result.jsonData);
                 }
             }
-            if(!item) item = await beaversSystemInterface.uuidToDocument(result.uuid);
-            item.flags = mergeObject(item.flags,result.flags,{insertKeys:true})
-            return item
+            return await beaversSystemInterface.uuidToDocument(result.uuid)
         }
         result.isSame = (component: ComponentData) => {
             return beaversSystemInterface.componentIsSame(result, component);
@@ -476,7 +508,7 @@ export class CoreSystem implements System {
                 type : entity.documentName,
                 quantity: this.objectAttributeGet(entity,beaversSystemInterface.itemQuantityAttribute,1),
                 itemType: entity.documentName === "Item" ? entity.type : undefined,
-                jsonData: hasJsonData? entity.toObject(false) : undefined
+                jsonData: hasJsonData? entity.toObject() : undefined
             }
             result =  beaversSystemInterface.componentCreate(data);
         }
