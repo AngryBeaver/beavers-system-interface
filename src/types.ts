@@ -26,6 +26,7 @@ interface System extends SystemApi {
     init?:()=>Promise<void>;
     checkValidity:()=>void;
     addModule:(name:string)=>void;
+    addExtension:(moduleName:string,extension:Partial<Extension>)=>void;
     register:(implementation:SystemApi)=>void;
     currenciesToLowestValue: (currencies: Currencies)=>number;
     currencyToCurrencies: (lowestValue: number)=>Currencies;
