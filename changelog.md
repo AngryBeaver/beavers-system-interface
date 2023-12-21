@@ -1,3 +1,8 @@
+## 2.1.7
+- fix bug with asymmetric isSame implementations.
+## 2.1.6
+- add Module Extension for components
+- allow asymmetric isSame implementations.
 ## 2.1.5
 - refactor gamepad types to new beavers-gamepad npm package,
 - update tokenMovementGamepadModule to beavers gamepad 2.0.0

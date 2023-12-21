@@ -2,7 +2,7 @@
     "title": "Beaver's System Interface",
     "description": "An Interface to uniformly access system dependent implementations",
     "id": "beavers-system-interface",
-    "version": "2.1.6",
+    "version": "2.1.7",
     "authors": [
       {
         "name": "angryBeaver",
@@ -30,6 +30,11 @@
     "relationships": {
       "systems": [],
       "recommends": [
+        {
+          "id": "bsa-dnd4",
+          "type": "module",
+          "manifest": "https://github.com/AngryBeaver/bsa-dnd4e/releases/latest/download/module.json"
+        },
         {
           "id": "bsa-dnd5e",
           "type": "module",
@@ -61,6 +66,16 @@
           "compatibility": {
             "verified": "1.0.2"
           }
+        },
+        {
+          "id": "bsa-sfrpg",
+          "type": "module",
+          "manifest": "https://github.com/AngryBeaver/bsa-sfrpg/releases/latest/download/module.json"
+        },
+        {
+          "id": "bsa-swnr",
+          "type": "module",
+          "manifest": "https://github.com/AngryBeaver/bsa-swnr/releases/latest/download/module.json"
         }
       ]
     },

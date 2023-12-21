@@ -356,12 +356,14 @@ export class CoreSystem implements System {
                 )
                 let remainingEquivalentQuantity = equivalentQuantity+component.quantity;
                 //equivalentComponents are not enough
-                if(remainingEquivalentQuantity<=0){
+                if(remainingEquivalentQuantity<=0) {
                     //remove all equivalentComponents
-                    const entity = await equivalentComponent[0].getEntity();
-                    component.jsonData = entity.toObject()
-                    itemChange.delete.push(component);
-                    itemChange.merge.push(...equivalentComponent.map(c=>c.id));
+                    if (equivalentComponent[0]) {
+                        const entity = await equivalentComponent[0].getEntity();
+                        component.jsonData = entity.toObject()
+                        itemChange.delete.push(component);
+                        itemChange.merge.push(...equivalentComponent.map(c => c.id));
+                    }
                     for(const c of rest){
                         remainingEquivalentQuantity += c.quantity
                         if(remainingEquivalentQuantity<=0){
