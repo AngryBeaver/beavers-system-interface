@@ -1,11 +1,11 @@
 {
 	"name": "beavers-system-interface",
 	"title": "Beaver's System Interface",
-	"version": "2.1.7",
+	"version": "2.1.8",
 	"description": "Beaver's System Interface",
-	"#devDir": "D:\\Vtts\\v10\\Data\\modules",
+	"devDir": "D:\\Vtts\\v10\\Data\\modules",
 	"#devDir": "D:\\Vtts\\v11\\Data\\modules",
-	"devDir": "D:\\Vtts\\v11.315\\Data\\modules",
+	"#devDir": "D:\\Vtts\\v11.315\\Data\\modules",
 	"main": "src/main.js",
 	"scripts": {
 		"type": "npx -p typescript tsc src/types.ts --declaration --emitDeclarationOnly --outDir dist/src",

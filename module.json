@@ -2,7 +2,7 @@
     "title": "Beaver's System Interface",
     "description": "An Interface to uniformly access system dependent implementations",
     "id": "beavers-system-interface",
-    "version": "2.1.7",
+    "version": "2.1.8",
     "authors": [
       {
         "name": "angryBeaver",
@@ -25,8 +25,8 @@
     "packs": [
     ],
     "url": "https://github.com/AngryBeaver/beavers-system-interface",
-    "manifest": "https://github.com/AngryBeaver/beavers-system-interface/releases/latest/download/module.json",
-    "download": "https://github.com/AngryBeaver/beavers-system-interface/releases/latest/download/beavers-system-interface.zip",
+    "manifest": "https://github.com/AngryBeaver/beavers-system-interface/releases/download/vtt-10/module.json",
+    "download": "https://github.com/AngryBeaver/beavers-system-interface/releases/download/vtt-10/beavers-system-interface.zip",
     "relationships": {
       "systems": [],
       "recommends": [
