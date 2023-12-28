@@ -1,3 +1,5 @@
+## 2.1.8
+- own vtt-10 branch (eol)
 ## 2.1.7
 - fix bug with asymmetric isSame implementations.
 ## 2.1.6
