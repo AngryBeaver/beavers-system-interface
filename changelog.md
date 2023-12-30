@@ -1,3 +1,8 @@
+## 2.1.9
+- fixed "Components did not copy over the nested flags correctly from source"
+  - was using foundries helper setProperty which is not creating deep structures. -> using now objectAttributeSet
+## 2.1.8
+- own vtt-10 branch (eol)
 ## 2.1.7
 - fix bug with asymmetric isSame implementations.
 ## 2.1.6

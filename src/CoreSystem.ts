@@ -468,7 +468,7 @@ export class CoreSystem implements System {
         Object.entries(this._extensions).forEach(([moduleId,ext])=>{
             if(ext.componentAddFlags){
                 ext.componentAddFlags.forEach((flag)=>{
-                    setProperty(data,`flags.${moduleId}.${flag}`,undefined);
+                    this.objectAttributeSet(data,`flags.${moduleId}.${flag}`,undefined);
                 });
             }
         });
