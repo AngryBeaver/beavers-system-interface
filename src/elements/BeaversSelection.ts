@@ -5,6 +5,8 @@ export class BeaversSelection extends HTMLElement {
     removeOutsideClick: () => void;
     selected: string | undefined;
     dropDown: JQuery;
+    oninput: ((this:GlobalEventHandlers, ev: Event) => any) | null;
+    onchange: ((this:GlobalEventHandlers, ev: Event) => any) | null;
 
     constructor() {
         super();
@@ -29,6 +31,8 @@ export class BeaversSelection extends HTMLElement {
 
     render(template) {
         const select = $(this).find('select');
+        this.oninput = select[0].oninput || jQuery["_data"]?.(select[0],'events')?.["input"]?.[0]?.handler;
+        this.onchange = select[0].onchange || jQuery["_data"]?.(select[0],'events')?.["change"]?.[0]?.handler;
         const name = select.attr("name");
         const disabled = select.attr("disabled");
         const size = select.attr("size");
@@ -41,13 +45,13 @@ export class BeaversSelection extends HTMLElement {
             size: size
         }));
         this.dropDown = $(this).find('.dropdown');
-        $(this).find('input').on('input', () => this.onInput());
+        $(this).find('input').on('input', (e) => this._onInput(e));
         if(disabled == undefined ) {
             $(this).find('.default-text, .dropdown>i' ).on('click', () => this.toggleDropdown());
             $(this).find('.option').on('mouseover', (event) => this.hoverOption(event));
             $(this).find('.option').on('click', (event) => this.clickOption(event));
         }
-        this.select(this.selected);
+        this.select(this.selected,true);
     }
 
     toggleDropdown() {
@@ -103,18 +107,24 @@ export class BeaversSelection extends HTMLElement {
         container.css({position:"absolute",left:-left,top:-top,width:(width-1+3)+"px"});
     }
 
-    select(val: string) {
+    select(val: string,initialize: boolean=false) {
         this.selected = val;
         const input = $(this).find('input');
         input.val(val);
-        input.trigger('input');
-        input.trigger('change');
-    }
-
-    onInput() {
         const option = this.getOption(this.selected);
         $(this).find('.default-text').html(option.html());
         this.showOption(option);
+        if(!initialize) {
+            input.trigger('input');
+            input.trigger('change');
+        }
+    }
+
+
+    _onInput(e) {
+        if(this.oninput){
+            this.oninput(e)
+        }
     }
 
     getOption(id: string | undefined): JQuery {
