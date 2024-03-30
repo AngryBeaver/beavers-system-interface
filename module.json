@@ -2,7 +2,7 @@
     "title": "Beaver's System Interface",
     "description": "An Interface to uniformly access system dependent implementations",
     "id": "beavers-system-interface",
-    "version": "2.1.9",
+    "version": "2.1.10",
     "authors": [
       {
         "name": "angryBeaver",
@@ -31,7 +31,22 @@
       "systems": [],
       "recommends": [
         {
-          "id": "bsa-dnd4",
+          "id": "bsa-a5e",
+          "type": "module",
+          "manifest": "https://github.com/AngryBeaver/bsa-a5e/releases/latest/download/module.json"
+        },
+        {
+          "id": "bsa-cyberpunk-red-core",
+          "type": "module",
+          "manifest": "https://github.com/AngryBeaver/bsa-cyberpunk-red-core/releases/latest/download/module.json"
+        },
+        {
+          "id": "bsa-D35E",
+          "type": "module",
+          "manifest": "https://github.com/AngryBeaver/bsa-d35e/releases/latest/download/module.json"
+        },
+        {
+          "id": "bsa-dnd4e",
           "type": "module",
           "manifest": "https://github.com/AngryBeaver/bsa-dnd4e/releases/latest/download/module.json"
         },
@@ -39,33 +54,26 @@
           "id": "bsa-dnd5e",
           "type": "module",
           "manifest": "https://github.com/AngryBeaver/bsa-dnd5e/releases/latest/download/module.json",
-          "compatibility": {
-            "verified": "2.0.1"
-          }
+        },
+        {
+          "id": "bsa-fallout",
+          "type": "module",
+          "manifest": "https://github.com/AngryBeaver/bsa-fallout/releases/latest/download/module.json"
         },
         {
           "id": "bsa-pf2e",
           "type": "module",
           "manifest": "https://github.com/AngryBeaver/bsa-pf2e/releases/latest/download/module.json",
-          "compatibility": {
-            "verified": "1.0.1"
-          }
         },
         {
           "id": "bsa-pf1",
           "type": "module",
           "manifest": "https://github.com/AngryBeaver/bsa-pf1/releases/latest/download/module.json",
-          "compatibility": {
-            "verified": "1.0.1"
-          }
         },
         {
           "id": "bsa-swade",
           "type": "module",
           "manifest": "https://github.com/AngryBeaver/bsa-swade/releases/latest/download/module.json",
-          "compatibility": {
-            "verified": "1.0.2"
-          }
         },
         {
           "id": "bsa-sfrpg",

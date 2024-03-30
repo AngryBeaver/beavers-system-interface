@@ -1,3 +1,6 @@
+## 2.1.10
+- fixed wrong recommends id
+- add all currently known bsa-x adaptions
 ## 2.1.9
 - fixed "Components did not copy over the nested flags correctly from source"
   - was using foundries helper setProperty which is not creating deep structures. -> using now objectAttributeSet
