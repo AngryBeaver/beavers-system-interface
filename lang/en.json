@@ -22,6 +22,36 @@
     },
     "TokenMovement": {
       "desc": "this module allows to control the movement of a token"
+    },
+    "tests": {
+      "incrementStep": {
+        "info": {
+          "label": "IncrementStep",
+          "hint": "No user input needed. It just succeeds"
+        },
+        "customization": {
+          "label": "Name",
+          "hint": "Describe what this step is about e.g. killed a skeleton"
+        }
+      },
+      "gmRequest": {
+        "info": {
+          "label": "GM Request",
+          "hint": "Will send a question to gm who decides about success or fail"
+        }
+      },
+      "abilityTest": {
+        "info": {
+          "label": "Ability Test",
+          "hint": "Ability check of the current actor"
+        }
+      },
+      "skillTest": {
+        "info": {
+          "label": "Skill Test",
+          "hint": "Skill check of the current actor"
+        }
+      }
     }
   }
 }

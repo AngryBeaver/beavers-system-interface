@@ -7,6 +7,7 @@ export class CoreSystem implements System {
     _modules: string[] = [];
     _configCurrencies:CurrencyConfig[];
     _extensions: {[moduleName:string]:Partial<Extension>} = {};
+    _testClasses: {[name:string]:TestClass<any>} = {};
 
     checkValidity() {
         if (this._modules.length > 0 && this._implementation === undefined) {
@@ -21,6 +22,14 @@ export class CoreSystem implements System {
         if(this._implementation === undefined){
             console.warn(game['i18n'].localize("beaversSystemInterface.NoImplementationRegistered"))
         }
+    }
+
+    registerTestClass<T extends string>(clazz: TestClass<T>){
+        this._testClasses[clazz.id] = clazz;
+    }
+
+    get testClasses(){
+        return {...this._testClasses}
     }
 
     addModule(name: string) {

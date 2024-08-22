@@ -2,6 +2,7 @@ import {CoreSystem} from "./CoreSystem.js";
 import {BeaversSelection} from "./elements/BeaversSelection.js";
 import {Settings} from "./Settings.js";
 import {TokenMovement} from "./classes/TokenMovement.js";
+import {registerHandleBars} from "./handlebars/beavers-input-field.js";
 
 export const NAMESPACE = "beavers-system-interface";
 
@@ -18,8 +19,10 @@ Hooks.on("ready",async function () {
     globalThis.selectionTemplate = await getTemplate('modules/beavers-system-interface/templates/select.hbs');
     customElements.define('beavers-selection',BeaversSelection);
     Hooks.call("beavers-system-interface.ready");
+    registerHandleBars();
 });
 
 Hooks.on("beavers-gamepad.ready", async function(manager){
     manager.registerGamepadModule(TokenMovement);
 })
+
