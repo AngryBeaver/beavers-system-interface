@@ -26,7 +26,7 @@
     "tests": {
       "incrementStep": {
         "info": {
-          "label": "IncrementStep",
+          "label": "Increment Step",
           "hint": "No user input needed. It just succeeds"
         },
         "customization": {

@@ -11,11 +11,11 @@ class IncrementStep implements TestClass<"name"> {
         return result;
     }
 
-    readonly informationFields:InputField = {
+    readonly informationField:InfoField = {
         name: "type",
         type: "info",
-        label: game['i18n'].localize("beaversSystemInterface.tests.incrementStep.label"),
-        note: game['i18n'].localize("beaversSystemInterface.tests.incrementStep.note")
+        label: game['i18n'].localize("beaversSystemInterface.tests.incrementStep.info.label"),
+        note: game['i18n'].localize("beaversSystemInterface.tests.incrementStep.info.note")
     }
 
     readonly customizationFields:{

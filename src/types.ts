@@ -149,7 +149,7 @@ interface TestClass <T extends string> {
     id: string,
     create(data:Record<T, any>): Test<T>
     customizationFields: Record<T, InputField>
-    informationFields?: InputField
+    informationField: InfoField
 }
 
 interface Test<T extends string> {
@@ -177,12 +177,9 @@ type InputField = InfoField | TextField | SelectionField | BooleanField | Number
 interface TestRenderOptions{
     prefixName?: string;
     disabled?: boolean;
+    value?: any;
 }
-interface BeaversInputField extends InputFieldSetup, TestRenderOptions{
-    disabled?: boolean,
-    prefixName?: string;
-    value?: any,
-}
+type BeaversInputField = (InfoField | TextField | SelectionField | BooleanField | NumberField) & TestRenderOptions
 interface InputFieldSetup {
     label: string,
     name: string,

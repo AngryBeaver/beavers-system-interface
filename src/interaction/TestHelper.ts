@@ -11,16 +11,3 @@
 // -> -> -> often this is exactly one success or one fail.
 // -> -> customizationFields
 
-export class TestHelper {
-
-    async renderTest(test: Test<any>){
-        var customizedHtml:string = "<span class='fieldSection'>";
-        var inputFieldTemplate
-            = await getTemplate('modules/beavers-system-interface/templates/beavers-input-field.hbs');
-        for (let [key,inputField] of Object.entries(test.customizationFields)) {
-            customizedHtml += inputFieldTemplate({...inputField,value:test.data[key]});
-        }
-        return customizedHtml+"</span>";
-    }
-}
-
