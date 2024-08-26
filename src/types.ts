@@ -25,6 +25,9 @@ interface SystemApi {
 interface System extends SystemApi {
     init?:()=>Promise<void>;
     checkValidity:()=>void;
+    initiator:(data:InitiatorData)=>InitiatorI;
+    testClasses: Record<string,TestClass<any>>
+    registerTestClass:(clazz: TestClass<any>)=>void;
     addModule:(name:string)=>void;
     addExtension:(moduleName:string,extension:Partial<Extension>)=>void;
     register:(implementation:SystemApi)=>void;
@@ -122,4 +125,101 @@ interface ItemChange {
 
 interface TokenMovementInstance {
     move:(x:number,y:number)=>void
+}
+
+interface BeaversTests {
+    fails: number,
+    ands: {
+        [key: number]: BeaversTestAnd,
+    }
+}
+
+interface BeaversTestAnd {
+    hits: number,
+    ors: {
+        [key: number]: SerializedTest<any>,
+    }
+}
+
+interface SerializedTest<T extends string> {
+    type: string
+    data: Record<T, any>
+}
+
+interface TestClass <T extends string> {
+    type: string,
+    create(data:Record<T, any>): Test<T>
+    customizationFields: Record<T, InputField>
+    informationField: InfoField
+}
+
+interface Test<T extends string> {
+    parent: TestClass<T>
+    data: Partial<Record<T, any>>
+    action: (initiatorData:InitiatorData) => Promise<TestResult>
+    render: () => string
+}
+
+interface TestResult {
+    success: number,
+    fail: number
+}
+
+interface InitiatorData {
+    userId: string,
+    actorId: string,
+    tokenId?: string,
+    sceneId: string,
+}
+interface InitiatorI extends InitiatorData{
+    user: User,
+    token: Token,
+    actor: Actor,
+    data: InitiatorData
+}
+
+type InputType =  "info"| "selection" | "number" | "text" | "area" | "boolean";
+type InputField = InfoField | TextField | SelectionField | BooleanField | NumberField;
+
+interface TestRenderOptions{
+    prefixName?: string;
+    disabled?: boolean;
+    minimized?: boolean;
+    value?: any;
+}
+type BeaversInputField = (InfoField | TextField | SelectionField | BooleanField | NumberField) & TestRenderOptions
+interface InputFieldSetup {
+    label: string,
+    name: string,
+    type: InputType,
+    note?: string,
+    defaultValue?: any,
+}
+
+interface InfoField extends InputFieldSetup{
+    type: "info",
+    defaultValue?: number,
+}
+
+interface NumberField extends InputFieldSetup{
+    type: "number",
+    defaultValue?: number,
+}
+
+interface BooleanField extends InputFieldSetup{
+    type: "boolean",
+    defaultValue?: boolean,
+}
+
+interface TextField extends InputFieldSetup{
+    type: "text"|"area",
+    defaultValue?: string,
+}
+
+interface SelectionField extends InputFieldSetup{
+    type: "selection",
+    defaultValue?: string,
+    choices: {
+        [id:string]:{text:string,img?:string}
+    },
 }

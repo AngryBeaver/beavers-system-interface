@@ -1,5 +1,6 @@
 import {SelectDialog} from "./apps/SelectDialog.js";
 import {TokenMovement} from "./classes/TokenMovement.js";
+import {Initiator} from "./classes/Initiator.js";
 
 export class CoreSystem implements System {
     _version: number =  2
@@ -7,6 +8,7 @@ export class CoreSystem implements System {
     _modules: string[] = [];
     _configCurrencies:CurrencyConfig[];
     _extensions: {[moduleName:string]:Partial<Extension>} = {};
+    _testClasses: {[name:string]:TestClass<any>} = {};
 
     checkValidity() {
         if (this._modules.length > 0 && this._implementation === undefined) {
@@ -21,6 +23,18 @@ export class CoreSystem implements System {
         if(this._implementation === undefined){
             console.warn(game['i18n'].localize("beaversSystemInterface.NoImplementationRegistered"))
         }
+    }
+
+    registerTestClass<T extends string>(clazz: TestClass<T>){
+        this._testClasses[clazz.type] = clazz;
+    }
+
+    get testClasses(){
+        return {...this._testClasses}
+    }
+
+    initiator(data:InitiatorData):InitiatorI{
+        return new Initiator(data);
     }
 
     addModule(name: string) {
