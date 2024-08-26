@@ -26,6 +26,9 @@ export class BeaversSelection extends HTMLElement {
                         this.render(template);
                     }
                 );
+        }else{
+            const html = $(this).html();
+            $(this).replaceWith(html);
         }
     }
 

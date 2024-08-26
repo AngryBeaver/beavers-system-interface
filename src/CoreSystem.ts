@@ -1,5 +1,6 @@
 import {SelectDialog} from "./apps/SelectDialog.js";
 import {TokenMovement} from "./classes/TokenMovement.js";
+import {Initiator} from "./classes/Initiator.js";
 
 export class CoreSystem implements System {
     _version: number =  2
@@ -25,11 +26,15 @@ export class CoreSystem implements System {
     }
 
     registerTestClass<T extends string>(clazz: TestClass<T>){
-        this._testClasses[clazz.id] = clazz;
+        this._testClasses[clazz.type] = clazz;
     }
 
     get testClasses(){
         return {...this._testClasses}
+    }
+
+    initiator(data:InitiatorData):InitiatorI{
+        return new Initiator(data);
     }
 
     addModule(name: string) {

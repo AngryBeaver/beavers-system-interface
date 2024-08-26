@@ -7,10 +7,10 @@
             >{{value}}</textarea>
         {{else if (eq type "info")}}
         {{else if (eq type "selection")}}
-
+            <beavers-selection>
                 <select name="{{prefixName}}.{{name}}" {{#if disabled}}disabled="true"{{/if}}>
                     {{#select value}}
-                        <option selected disabled value=""></option>
+                        {{#if (or (not value) (eq value ""))}}<option selected disabled value=""></option>{{/if}}
                         {{#each choices}}
                             <option value="{{@key}}" img="{{this.img}}">
                                 {{this.text}}
@@ -18,13 +18,13 @@
                         {{/each}}
                     {{/select}}
                 </select>
-
+            </beavers-selection>
         {{else}}
             <input {{#if disabled}}disabled=true{{/if}} {{#if defaultValue}}placeholder="{{defaultValue}}"{{/if}}
                    value="{{value}}" name="{{prefixName}}.{{name}}" type="{{type}}"/>
         {{/if}}
     </div>
-    {{#if note}}
+    {{#if (and note (not minimized))}}
         <p class="notes">{{note}}</p>
     {{/if}}
 </div>

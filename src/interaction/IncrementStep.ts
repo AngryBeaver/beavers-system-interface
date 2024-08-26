@@ -3,7 +3,7 @@
 
 class IncrementStep implements TestClass<"name"> {
 
-    id= "IncrementStep";
+    type= "IncrementStep";
     create(data:Record<"name",any>){
         const result = new IncrementStepCustomized();
         result.data = data;
@@ -18,7 +18,7 @@ class IncrementStep implements TestClass<"name"> {
         note: game['i18n'].localize("beaversSystemInterface.tests.incrementStep.info.note")
     }
 
-    readonly customizationFields:{
+    readonly customizationFields: Record<"name",InputField> = {
         name: {
             name: "name",
             label: "Description",
@@ -35,15 +35,15 @@ class IncrementStepCustomized implements Test<"name"> {
 
     parent: IncrementStep;
 
-    data:{name: undefined};
+    data:{name: ""};
 
     public action = async (initiatorData: InitiatorData) => ({
         success: 1,
         fail: 0
     });
 
-    public render = (data: any): string => {
-        return data.name;
+    public render = (): string => {
+        return this.data.name;
     };
 
 }

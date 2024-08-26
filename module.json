@@ -84,6 +84,11 @@
         "id": "bsa-swnr",
         "type": "module",
         "manifest": "https://github.com/AngryBeaver/bsa-swnr/releases/latest/download/module.json"
+      },
+      {
+        "id": "bsa-wfrp4e",
+        "type": "module",
+        "manifest": "https://github.com/AngryBeaver/bsa-wfrp4e/releases/latest/download/module.json"
       }
     ]
   },

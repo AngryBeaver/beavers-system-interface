@@ -1,3 +1,5 @@
+## 2.2.0
+- add modular Tests
 ## 2.1.10
 - fixed wrong recommends id
 - add all currently known bsa-x adaptions

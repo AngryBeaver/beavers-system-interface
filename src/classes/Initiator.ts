@@ -1,4 +1,4 @@
-export class Initiator implements InitiatorData{
+export class Initiator implements InitiatorI{
 
     actorId: string;
     sceneId: string;

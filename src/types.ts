@@ -25,6 +25,7 @@ interface SystemApi {
 interface System extends SystemApi {
     init?:()=>Promise<void>;
     checkValidity:()=>void;
+    initiator:(data:InitiatorData)=>InitiatorI;
     testClasses: Record<string,TestClass<any>>
     registerTestClass:(clazz: TestClass<any>)=>void;
     addModule:(name:string)=>void;
@@ -141,12 +142,12 @@ interface BeaversTestAnd {
 }
 
 interface SerializedTest<T extends string> {
-    id: string
+    type: string
     data: Record<T, any>
 }
 
 interface TestClass <T extends string> {
-    id: string,
+    type: string,
     create(data:Record<T, any>): Test<T>
     customizationFields: Record<T, InputField>
     informationField: InfoField
@@ -156,7 +157,7 @@ interface Test<T extends string> {
     parent: TestClass<T>
     data: Partial<Record<T, any>>
     action: (initiatorData:InitiatorData) => Promise<TestResult>
-    render: (data:any) => string
+    render: () => string
 }
 
 interface TestResult {
@@ -170,6 +171,12 @@ interface InitiatorData {
     tokenId?: string,
     sceneId: string,
 }
+interface InitiatorI extends InitiatorData{
+    user: User,
+    token: Token,
+    actor: Actor,
+    data: InitiatorData
+}
 
 type InputType =  "info"| "selection" | "number" | "text" | "area" | "boolean";
 type InputField = InfoField | TextField | SelectionField | BooleanField | NumberField;
@@ -177,6 +184,7 @@ type InputField = InfoField | TextField | SelectionField | BooleanField | Number
 interface TestRenderOptions{
     prefixName?: string;
     disabled?: boolean;
+    minimized?: boolean;
     value?: any;
 }
 type BeaversInputField = (InfoField | TextField | SelectionField | BooleanField | NumberField) & TestRenderOptions
