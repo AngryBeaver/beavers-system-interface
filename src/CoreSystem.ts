@@ -409,7 +409,7 @@ export class CoreSystem implements System {
                 if(component.quantity !=0) {
                     const entity = await component.getEntity();
                     const data = entity.toObject(false);
-                    data.flags = mergeObject(data.flags,component.flags||{},{insertKeys:true})
+                    data.flags = foundry.utils.mergeObject(data.flags,component.flags||{},{insertKeys:true})
                     this.objectAttributeSet(data, beaversSystemInterface.itemQuantityAttribute, component.quantity);
                     itemChange.create.push(data)
                 }
@@ -445,7 +445,7 @@ export class CoreSystem implements System {
     }
 
     componentCreate(data: any): Component {
-        const result = mergeObject(this.componentDefaultData, data, {insertKeys: false});
+        const result = foundry.utils.mergeObject(this.componentDefaultData, data, {insertKeys: false});
         result.getEntity = async () => {
             if (result.jsonData) {
                 if (result.type === "Item") {
@@ -531,8 +531,8 @@ export class CoreSystem implements System {
         Object.entries(this._extensions).forEach(([moduleId,ext])=>{
             if(ext.componentAddFlags){
                 ext.componentAddFlags.forEach((flag)=>{
-                    const property = getProperty(entity,`flags.${moduleId}.${flag}`);
-                    setProperty(result,`flags.${moduleId}.${flag}`,property);
+                    const property = foundry.utils.getProperty(entity,`flags.${moduleId}.${flag}`);
+                    foundry.utils.setProperty(result,`flags.${moduleId}.${flag}`,property);
                 });
             }
         });

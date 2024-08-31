@@ -28,7 +28,7 @@ export class SelectDialog extends Application {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             title: game["i18n"].localize(`beaversSystemInterface.select-dialog.title`),
             width: 300,
             height: 80,
@@ -40,7 +40,7 @@ export class SelectDialog extends Application {
     }
 
     getData() {
-        return mergeObject(this.selectData,{size:"l"});
+        return foundry.utils.mergeObject(this.selectData,{size:"l"});
     }
 
     activateListeners(html: JQuery) {
