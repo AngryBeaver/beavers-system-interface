@@ -1,3 +1,5 @@
+## 2.2.1
+- remove compatibility warnings for v14
 ## 2.2.0
 - add modular Tests
 ## 2.1.10
