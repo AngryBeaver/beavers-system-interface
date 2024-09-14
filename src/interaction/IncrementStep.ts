@@ -28,6 +28,10 @@ class IncrementStep implements TestClass<"name"> {
         }
     }
 
+    readonly renderTypes: Record<"name",TestRenderType> = {
+        name: "setup"
+    }
+
 }
 
 

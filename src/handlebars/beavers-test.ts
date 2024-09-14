@@ -1,23 +1,23 @@
 export function registerHandleBars() {
     getTemplate('modules/beavers-system-interface/templates/beavers-input-field.hbs').then(template => {
-        Handlebars.registerHelper('beavers-test', function (serializedTest: SerializedTest<any>, options: TestRenderOptions) {
+        Handlebars.registerPartial('beavers-input-field', template);
+        Handlebars.registerHelper('beavers-test', function (serializedTest: SerializedTest<any>, options: TestRenderOptions = {}) {
             const testClass = beaversSystemInterface.testClasses[serializedTest.type] as TestClass<any>;
+            options.testRenderType = options.testRenderType || "setup";
             let customizedHtml: string = `<span class="beavers-test">`
             if (!options.disabled) {
-                customizedHtml = `${testOptions({...options, value : serializedTest.type})}`
+                customizedHtml = testOptions({...options, value: serializedTest.type})
                 if (testClass != undefined) {
                     for (let [key, inputField] of Object.entries(testClass.customizationFields)) {
-                        if (!options.disabled) {
-                            let i: BeaversInputField = {...inputField as BeaversInputField}
-                            i.value = serializedTest.data?.[key] || inputField.defaultValue
-                            i.prefixName = options.prefixName + ".data";
-                            i.minimized = options.minimized;
-                            i.disabled = options.disabled;
-                            customizedHtml += template(i);
-                        }
+                        let i: BeaversInputField = {...inputField as BeaversInputField}
+                        i.value = serializedTest.data?.[key] || inputField.defaultValue
+                        i.prefixName = options.prefixName + ".data";
+                        i.minimized = options.minimized;
+                        i.disabled = !(options.testRenderType === "setup" || testClass.renderTypes?.[key] || testClass.renderTypes?.[key] === options.testRenderType);
+                        customizedHtml += template(i);
                     }
                 }
-            } else if(testClass != undefined){
+            } else if (testClass != undefined) {
                 const test = testClass.create(serializedTest.data);
                 customizedHtml += test.render();
             }
@@ -36,14 +36,14 @@ export function registerHandleBars() {
                 prefixName: options.prefixName,
                 name: "type",
                 type: "selection",
+                disabled: options.testRenderType !== "setup",
                 value: options.value
             }
-            selection.disabled = options.disabled;
             selection.minimized = options.minimized;
             return "<span class='beavers-test-selection'>" + template(selection) + "</span>";
         }
 
-        Handlebars.registerHelper('beavers-test-options', testOptions);
+        Handlebars.registerHelper('beavers-test-selection', testOptions);
     });
 
     Handlebars.registerHelper('beavers-object', function (...args) {

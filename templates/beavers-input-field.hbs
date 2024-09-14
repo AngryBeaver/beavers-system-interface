@@ -1,5 +1,8 @@
 <div class="form-group">
     <label>{{label}}</label>
+    {{#if (eq type "button")}}
+        <button type="button" name="{{prefixName}}.{{name}}">{{{content}}}</button>
+    {{else}}
     <div class="form-fields">
         {{#if (eq type "area")}}
             <textarea {{#if disabled}}disabled="true"{{/if}} style="resize:vertical" name="{{prefixName}}.{{name}}"
@@ -24,6 +27,7 @@
                    value="{{value}}" name="{{prefixName}}.{{name}}" type="{{type}}"/>
         {{/if}}
     </div>
+    {{/if}}
     {{#if (and note (not minimized))}}
         <p class="notes">{{note}}</p>
     {{/if}}

@@ -151,6 +151,7 @@ interface TestClass <T extends string> {
     create(data:Record<T, any>): Test<T>
     customizationFields: Record<T, InputField>
     informationField: InfoField
+    renderTypes?:Record<T,TestRenderType>
 }
 
 interface Test<T extends string> {
@@ -178,16 +179,21 @@ interface InitiatorI extends InitiatorData{
     data: InitiatorData
 }
 
-type InputType =  "info"| "selection" | "number" | "text" | "area" | "boolean";
-type InputField = InfoField | TextField | SelectionField | BooleanField | NumberField;
+type InputType =  "info"| "selection" | "number" | "text" | "area" | "boolean" | "button";
+type InputField = InfoField | TextField | SelectionField | BooleanField | NumberField | ButtonField;
+type TestRenderType = "setup" | "config" | "info"
 
-interface TestRenderOptions{
+interface RenderOptions{
     prefixName?: string;
     disabled?: boolean;
     minimized?: boolean;
     value?: any;
 }
-type BeaversInputField = (InfoField | TextField | SelectionField | BooleanField | NumberField) & TestRenderOptions
+interface TestRenderOptions extends RenderOptions {
+    testRenderType?: TestRenderType
+}
+
+type BeaversInputField = InputField & RenderOptions
 interface InputFieldSetup {
     label: string,
     name: string,
@@ -196,6 +202,10 @@ interface InputFieldSetup {
     defaultValue?: any,
 }
 
+interface ButtonField extends InputFieldSetup{
+    type: "button",
+    content: string,
+}
 interface InfoField extends InputFieldSetup{
     type: "info",
     defaultValue?: number,

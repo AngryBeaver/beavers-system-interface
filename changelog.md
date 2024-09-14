@@ -1,3 +1,7 @@
+## 2.2.2
+- add Handlebar Partial beavers-input-field
+- rename Handlebar Partial beavers-test-options -> beavers-test-selection
+- add option renderType to Tests
 ## 2.2.1
 - remove compatibility warnings for v14
 ## 2.2.0
