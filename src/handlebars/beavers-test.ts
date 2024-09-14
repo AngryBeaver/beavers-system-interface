@@ -9,11 +9,12 @@ export function registerHandleBars() {
                 customizedHtml = testOptions({...options, value: serializedTest.type})
                 if (testClass != undefined) {
                     for (let [key, inputField] of Object.entries(testClass.customizationFields)) {
+                        var configRenderType = testClass.renderTypes?.[key] || "setup";
                         let i: BeaversInputField = {...inputField as BeaversInputField}
                         i.value = serializedTest.data?.[key] || inputField.defaultValue
                         i.prefixName = options.prefixName + ".data";
                         i.minimized = options.minimized;
-                        i.disabled = !(options.testRenderType === "setup" || testClass.renderTypes?.[key] || testClass.renderTypes?.[key] === options.testRenderType);
+                        i.disabled = !(options.testRenderType === "setup" || configRenderType === options.testRenderType);
                         customizedHtml += template(i);
                     }
                 }
