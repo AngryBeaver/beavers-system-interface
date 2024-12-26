@@ -1,3 +1,7 @@
+## 2.2.3
+- fix SelectDialog for Tests with html rendered values
+- ready for v13
+- remove some deprecations for v14
 ## 2.2.2
 - add Handlebar Partial beavers-input-field
 - rename Handlebar Partial beavers-test-options -> beavers-test-selection

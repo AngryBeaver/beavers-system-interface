@@ -1,3 +1,5 @@
+import {Settings} from "../Settings.js";
+
 export class SelectDialog extends Application {
     selectData: SelectData
     callback;
@@ -40,7 +42,7 @@ export class SelectDialog extends Application {
     }
 
     getData() {
-        return foundry.utils.mergeObject(this.selectData,{size:"l"});
+        return foundry.utils.mergeObject(this.selectData,{size:"l",enabled:Settings.get(Settings.ENABLE_SELECTION)});
     }
 
     activateListeners(html: JQuery) {
