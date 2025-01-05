@@ -23,7 +23,7 @@ export class SelectDialog extends Application {
         });
     }
 
-    constructor(data: SelectData , callback: (id: string | PromiseLike<string>) => void, options?: Partial<Application.Options>) {
+    constructor(data: SelectData , callback: (id: string | PromiseLike<string>) => void, options?: Partial<ApplicationOptions>) {
         super(options);
         this.selectData = data;
         this.callback = callback;

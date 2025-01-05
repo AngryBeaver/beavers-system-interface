@@ -1,3 +1,6 @@
+## 2.2.4
+- fix bug with beavers-test
+- upgrade typescript
 ## 2.2.3
 - fix SelectDialog for Tests with html rendered values
 - ready for v13

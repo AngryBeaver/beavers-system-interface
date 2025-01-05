@@ -2,7 +2,7 @@ import {SelectDialog} from "./apps/SelectDialog.js";
 import {TokenMovement} from "./classes/TokenMovement.js";
 import {Initiator} from "./classes/Initiator.js";
 
-export class CoreSystem implements System {
+export class CoreSystem implements BeaverSystem {
     _version: number =  2
     _implementation: SystemApi;
     _modules: string[] = [];

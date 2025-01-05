@@ -1,3 +1,4 @@
+
 export class Initiator implements InitiatorI{
 
     actorId: string;

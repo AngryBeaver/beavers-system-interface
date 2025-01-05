@@ -1,8 +1,8 @@
 import {
-    System
+    BeaverSystem
 } from "./types";
 
 
 declare global {
-    let beaversSystemInterface: System
+    let beaversSystemInterface: BeaverSystem
 }

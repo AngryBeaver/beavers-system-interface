@@ -1,5 +1,6 @@
 
 /* class decorator */
+
 function staticImplements<T>() {
     return <U extends T>(constructor: U) => {constructor};
 }
@@ -60,8 +61,8 @@ export class TokenMovement implements TokenMovementInstance{
         this.config.binding = gamepadConfig.modules[this.config.id].binding;
         const user = (game as Game).users?.find(u=>u.id === gamepadConfig.userId);
         this.userData = game["beavers-gamepad"].Settings.getUserData(gamepadConfig.userId);
-        if(user?.character?.id) {
-            this.initialize(user.character.uuid);
+        if(user?.["character"]?.id) {
+            this.initialize(user["character"].uuid);
         }
     }
 
@@ -119,6 +120,7 @@ export class TokenMovement implements TokenMovementInstance{
             const collisionPoint = {...position.collision}
             collisionPoint.x = collisionPoint.x + x * position.size
             collisionPoint.y = collisionPoint.y + y * position.size;
+            //@ts-ignore
             if (!token.checkCollision(collisionPoint) && this._checkSceneCollision(collisionPoint)) {
                 this.isMoving = true;
                 token.document.update({

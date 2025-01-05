@@ -1,10 +1,10 @@
 {
 	"name": "beavers-system-interface",
 	"title": "Beaver's System Interface",
-	"version": "2.2.3",
+	"version": "2.2.4",
 	"description": "Beaver's System Interface",
-	"devDir": "c:\\vtts\\v13.333\\Data\\modules",
-	"#devDir": "c:\\vtts\\v12.331\\Data\\modules",
+	"#devDir": "c:\\vtts\\v13.333\\Data\\modules",
+	"devDir": "c:\\vtts\\v12.331\\Data\\modules",
 	"#devDir": "c:\\vtts\\v11.315\\Data\\modules",
 	"main": "src/main.js",
 	"scripts": {
@@ -16,6 +16,7 @@
 		"devwatch": "npx gulp devWatch",
 		"devclean": "npx gulp devClean",
 		"release": "npx gulp zip",
+		"ts": "tsc",
 		"tag": "git tag -d ${npm_package_name}_${npm_package_version} 2>/dev/null ; git tag ${npm_package_name}_${npm_package_version} && git push -f origin ${npm_package_name}_${npm_package_version}"
 	},
 	"prettier": {
@@ -28,7 +29,7 @@
 	"devDependencies": {
 		"beavers-gamepad": "^2.0.0",
 		"@ethaks/fvtt-quench": "^0.6.0",
-		"@league-of-foundry-developers/foundry-vtt-types": "^0.8.8-9",
+		"@league-of-foundry-developers/foundry-vtt-types": "^12.331.3-beta",
 		"@types/jest": "^27.4.1",
 		"del": "^6.0.0",
 		"gulp": "^4.0.2",
@@ -43,7 +44,7 @@
 		"json-stringify-pretty-compact": "^3.0.0",
 		"karma-cli": "^2.0.0",
 		"prettier": "^2.7.1",
-		"typescript": "^4.6.3"
+		"typescript": "^5.4.5"
 	},
 	"dependencies": {
 		"save-dev": "^0.0.1-security"

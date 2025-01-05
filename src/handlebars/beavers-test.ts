@@ -1,3 +1,4 @@
+
 export function registerHandleBars() {
     getTemplate('modules/beavers-system-interface/templates/beavers-input-field.hbs').then(template => {
         Handlebars.registerPartial('beavers-input-field', template);
@@ -6,7 +7,7 @@ export function registerHandleBars() {
             options.testRenderType = options.testRenderType || "setup";
             let customizedHtml: string = `<span class="beavers-test">`
             if (!options.disabled) {
-                customizedHtml = testOptions({...options, value: serializedTest.type})
+                customizedHtml += testOptions({...options, value: serializedTest.type})
                 if (testClass != undefined) {
                     for (let [key, inputField] of Object.entries(testClass.customizationFields)) {
                         var configRenderType = testClass.renderTypes?.[key] || "setup";
