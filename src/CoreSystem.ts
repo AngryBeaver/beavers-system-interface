@@ -408,7 +408,7 @@ export class CoreSystem implements BeaverSystem {
                 }
                 if(component.quantity !=0) {
                     const entity = await component.getEntity();
-                    const data = entity.toObject(false);
+                    const data = entity.toObject(true);
                     data.flags = foundry.utils.mergeObject(data.flags,component.flags||{},{insertKeys:true})
                     this.objectAttributeSet(data, beaversSystemInterface.itemQuantityAttribute, component.quantity);
                     itemChange.create.push(data)
