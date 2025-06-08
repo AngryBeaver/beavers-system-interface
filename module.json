@@ -2,7 +2,7 @@
   "title": "Beaver's System Interface",
   "description": "An Interface to uniformly access system dependent implementations",
   "id": "beavers-system-interface",
-  "version": "2.2.5",
+  "version": "2.3.0",
   "authors": [
     {
       "name": "angryBeaver",
@@ -20,7 +20,8 @@
     "src/main.js"
   ],
   "styles": [
-    "css/simple-ui.css"
+    "css/simple-ui.css",
+    "css/beavers.css"
   ],
   "packs": [
   ],

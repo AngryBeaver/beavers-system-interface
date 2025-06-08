@@ -1,3 +1,5 @@
+## 2.3.0
+- add color theme
 ## 2.2.5
 - fix bug with created objects not cloning dnd5e system activities e.g. use potion.
 ## 2.2.4
