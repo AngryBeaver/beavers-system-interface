@@ -1,5 +1,4 @@
 import {SelectDialog} from "./apps/SelectDialog.js";
-import {TokenMovement} from "./classes/TokenMovement.js";
 import {Initiator} from "./classes/Initiator.js";
 
 export class CoreSystem implements BeaverSystem {
@@ -15,13 +14,13 @@ export class CoreSystem implements BeaverSystem {
             // @ts-ignore
             ui.notifications.error("Beavers System Interface | missing module BSA - " + game.system.id + " <a href='https://github.com/AngryBeaver/beavers-system-interface/wiki/BSA-x-links'>module links</a>",{permanent:true});
             console.error("The following modules will not work", this._modules);
-            throw Error(game['i18n'].localize("beaversSystemInterface.SystemNotFound"));
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.SystemNotFound"));
         }
         if(this._modules.length === 0){
-            console.warn(game['i18n'].localize("beaversSystemInterface.NoModulesRegistered"))
+            console.warn((game as foundry.Game)['i18n'].localize("beaversSystemInterface.NoModulesRegistered"))
         }
         if(this._implementation === undefined){
-            console.warn(game['i18n'].localize("beaversSystemInterface.NoImplementationRegistered"))
+            console.warn((game as foundry.Game)['i18n'].localize("beaversSystemInterface.NoImplementationRegistered"))
         }
     }
 
@@ -49,7 +48,7 @@ export class CoreSystem implements BeaverSystem {
     }
 
     register(implementation) {
-        if (implementation.id === game["system"].id) {
+        if (implementation.id === (game as foundry.Game)["system"].id) {
             this._implementation = implementation;
         }
     }
@@ -84,7 +83,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.configSkills !== undefined) {
             return this._implementation.configSkills;
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configSkills');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configSkills');
         }
     }
 
@@ -93,7 +92,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.configAbilities !== undefined) {
             return this._implementation.configAbilities;
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configAbilities');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configAbilities');
         }
     }
 
@@ -105,7 +104,7 @@ export class CoreSystem implements BeaverSystem {
             return this._implementation.configCurrencies;
         } else {
             this._checkImplementation();
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configCurrencies');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configCurrencies');
         }
     }
 
@@ -114,7 +113,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.configCanRollAbility !== undefined) {
             return this._implementation.configCanRollAbility;
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configCanRollAbility');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configCanRollAbility');
         }
     }
 
@@ -123,7 +122,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.configLootItemType !== undefined) {
             return this._implementation.configLootItemType;
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configLootItemType');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + ' configLootItemType');
         }
     }
 
@@ -158,7 +157,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.actorRollAbility !== undefined) {
             return this._implementation.actorRollAbility(actor, abilityId);
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollAbility');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollAbility');
         }
     }
 
@@ -167,7 +166,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.actorRollSkill !== undefined) {
             return this._implementation.actorRollSkill(actor, skillId);
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollSkill');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollSkill');
         }
     }
 
@@ -176,7 +175,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.actorRollTool !== undefined) {
             return this._implementation.actorRollTool(actor, item);
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollTool');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorRollTool');
         }
     }
 
@@ -186,7 +185,7 @@ export class CoreSystem implements BeaverSystem {
         } else {
             if(this._configCurrencies===undefined){
                 this._checkImplementation();
-                throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorGetCurrencies');
+                throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorGetCurrencies');
             }
             return this._actorCurrenciesGet(actor);
         }
@@ -216,7 +215,7 @@ export class CoreSystem implements BeaverSystem {
         const addValue = beaversSystemInterface.currenciesToLowestValue(add);
         const result = actorValue + addValue;
         if (result < 0) {
-            throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
+            throw new Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
         }
         return beaversSystemInterface.currencyToCurrencies(result);
     }
@@ -225,7 +224,7 @@ export class CoreSystem implements BeaverSystem {
         for(const [key, value] of Object.entries(add)){
             const sum = source[key] + value;
             if(sum< 0){
-                throw new Error(game['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
+                throw new Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.NotEnoughMoney"));
             }
             resultCurrencies[key] = sum;
         }
@@ -237,8 +236,8 @@ export class CoreSystem implements BeaverSystem {
             if(doExchange){
                 console.warn("actorCurrenciesAdd is deprecated plz upgrade your bsa-x module");
             }else{
-                ui.notifications?.error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
-                throw Error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+                ui.notifications?.error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+                throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
             }
             return await this._implementation.actorCurrenciesAdd(actor, currencies);
         }
@@ -248,7 +247,7 @@ export class CoreSystem implements BeaverSystem {
             return await this._implementation.actorCurrenciesStore(actor, resultCurrencies);
         } else {
             if(this._configCurrencies===undefined){
-                throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorCurrenciesAdd');
+                throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorCurrenciesAdd');
             }
             await this._actorStoreCurrency(actor, resultCurrencies);
         }
@@ -284,19 +283,19 @@ export class CoreSystem implements BeaverSystem {
         await actor.createEmbeddedDocuments("Item", createItems);
     }
 
-    actorCurrenciesCanAdd(actor, currencies: Currencies): boolean {
+    actorCurrenciesCanAdd(actor:Actor, currencies: Currencies): boolean {
         const actorCurrencies = this.actorCurrenciesGet(actor);
         const payValue = this.currenciesToLowestValue(currencies);
         const actorValue = this.currenciesToLowestValue(actorCurrencies);
         return 0 > actorValue + payValue;
     }
 
-    actorSheetAddTab(sheet, html, actor, tabData: { id: string, label: string, html: string }, tabBody:string): void {
+    actorSheetAddTab(sheet, html, actor:Actor, tabData: { id: string, label: string, html: string }, tabBody:string): void {
         this._checkImplementation();
         if (this._implementation?.actorSheetAddTab !== undefined) {
             return this._implementation.actorSheetAddTab(sheet, html, actor, tabData, tabBody);
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorSheetAddTab');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'actorSheetAddTab');
         }
     }
 
@@ -353,7 +352,7 @@ export class CoreSystem implements BeaverSystem {
             if(actorFindings.quantity != 0) {
                 const remainingQuantity = component.quantity + actorFindings.quantity;
                 if (remainingQuantity < 0) {
-                    throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
+                    throw new Error("Beavers System Interface | "+(game as foundry.Game)['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
                 }
                 let equivalentQuantity = 0;
                 const equivalentComponent:Component[] = [];
@@ -404,11 +403,12 @@ export class CoreSystem implements BeaverSystem {
                 }
             } else {
                 if (component.quantity < 0) {
-                    throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
+                    throw new Error("Beavers System Interface | "+(game as foundry.Game)['i18n'].localize("beaversSystemInterface.RemainingQuantityLessThenZero")+ component.name);
                 }
                 if(component.quantity !=0) {
                     const entity = await component.getEntity();
                     const data = entity.toObject(true);
+                    // @ts-ignore
                     data.flags = foundry.utils.mergeObject(data.flags,component.flags||{},{insertKeys:true})
                     this.objectAttributeSet(data, beaversSystemInterface.itemQuantityAttribute, component.quantity);
                     itemChange.create.push(data)
@@ -427,7 +427,7 @@ export class CoreSystem implements BeaverSystem {
         const parts = uuid.split(".");
         let result: foundry.abstract.Document<any, any> | null = null;
         if (parts[0] === "Compendium") {
-            const pack = game["packs"].get(parts[1] + "." + parts[2]);
+            const pack = (game as foundry.Game)["packs"].get(parts[1] + "." + parts[2]);
             if (pack !== undefined) {
                 let id = parts[3];
                 if(parts.length >= 5){
@@ -439,12 +439,13 @@ export class CoreSystem implements BeaverSystem {
             result = await fromUuid(uuid);
         }
         if (result === null) {
-            throw new Error("Beavers System Interface | "+game['i18n'].localize("beaversSystemInterface.DocumentNotFound")+ uuid);
+            throw new Error("Beavers System Interface | "+(game as foundry.Game)['i18n'].localize("beaversSystemInterface.DocumentNotFound")+ uuid);
         }
         return result;
     }
 
     componentCreate(data: any): Component {
+        // @ts-ignore
         const result = foundry.utils.mergeObject(this.componentDefaultData, data, {insertKeys: false});
         result.getEntity = async () => {
             if (result.jsonData) {
@@ -511,8 +512,8 @@ export class CoreSystem implements BeaverSystem {
         let result:Component;
         if (this._implementation?.componentFromEntity !== undefined) {
             if(this._implementation.version < 2){
-                ui.notifications?.error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
-                throw Error(game['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+                ui.notifications?.error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
+                throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.VersionsMismatch"));
             }
             result = this._implementation.componentFromEntity(entity,hasJsonData);
         } else {
@@ -531,7 +532,9 @@ export class CoreSystem implements BeaverSystem {
         Object.entries(this._extensions).forEach(([moduleId,ext])=>{
             if(ext.componentAddFlags){
                 ext.componentAddFlags.forEach((flag)=>{
+                    // @ts-ignore
                     const property = foundry.utils.getProperty(entity,`flags.${moduleId}.${flag}`);
+                    // @ts-ignore
                     foundry.utils.setProperty(result,`flags.${moduleId}.${flag}`,property);
                 });
             }
@@ -544,7 +547,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.itemQuantityAttribute !== undefined) {
             return this._implementation.itemQuantityAttribute;
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'itemQuantityAttribute');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'itemQuantityAttribute');
         }
     }
 
@@ -553,7 +556,7 @@ export class CoreSystem implements BeaverSystem {
         if (this._implementation?.itemPriceAttribute !== undefined) {
             return this._implementation.itemPriceAttribute;
         } else {
-            throw Error(game['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'itemQuantityAttribute');
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.MethodNotSupported") + 'itemQuantityAttribute');
         }
     }
 
@@ -587,20 +590,14 @@ export class CoreSystem implements BeaverSystem {
         }
     }
 
-    tokenMovementCreate(actorId:string){
-        const tokenMovement = new TokenMovement();
-        tokenMovement.initialize(actorId);
-        return tokenMovement;
-    }
-
     async uiDialogSelect(data: SelectData):Promise<string> {
         return SelectDialog.promise(data);
     }
 
     private _checkImplementation() {
         if (this._implementation === undefined) {
-            console.warn(game['i18n'].localize("beaversSystemInterface.SystemAdaptionNeededAddition"))
-            throw Error(game['i18n'].localize("beaversSystemInterface.SystemAdaptionNeeded"));
+            console.warn((game as foundry.Game)['i18n'].localize("beaversSystemInterface.SystemAdaptionNeededAddition"))
+            throw Error((game as foundry.Game)['i18n'].localize("beaversSystemInterface.SystemAdaptionNeeded"));
         }
     }
 

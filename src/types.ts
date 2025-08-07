@@ -8,23 +8,23 @@ declare global {
         configCurrencies: CurrencyConfig[];
         configCanRollAbility: boolean;
         configLootItemType: string;
-        actorRollSkill: (actor, skillId: string) => Promise<Roll | null>;
-        actorRollAbility: (actor, abilityId: string) => Promise<Roll | null>;
-        actorRollTool?: (actor, item) => Promise<Roll | null>;
-        actorCurrenciesAdd?: (actor, currencies: Currencies) => Promise<void>; //deprecated
-        actorCurrenciesGet?: (actor) => Currencies;
-        actorCurrenciesStore?: (actor, currencies: Currencies) => Promise<void>;
-        actorSheetAddTab: (sheet, html, actor, tabData: {
+        actorRollSkill: (actor:Actor, skillId: string) => Promise<Roll | null>;
+        actorRollAbility: (actor:Actor, abilityId: string) => Promise<Roll | null>;
+        actorRollTool?: (actor:Actor, item:Item) => Promise<Roll | null>;
+        actorCurrenciesAdd?: (actor:Actor, currencies: Currencies) => Promise<void>; //deprecated
+        actorCurrenciesGet?: (actor:Actor) => Currencies;
+        actorCurrenciesStore?: (actor:Actor, currencies: Currencies) => Promise<void>;
+        actorSheetAddTab: (sheet:any, html:any, actor:Actor, tabData: {
             id: string,
             label: string,
             html: string
         }, tabBody: string) => void;
         componentIsSame?: (a: ComponentData, b: ComponentData) => boolean,
-        componentFromEntity?: (entity, hasJsonData?: boolean) => Component,
+        componentFromEntity?: (entity: any, hasJsonData?: boolean) => Component,
         componentDefaultData?: ComponentData,
         itemQuantityAttribute: string,
         itemPriceAttribute: string,
-        itemSheetReplaceContent?: (app, html, element) => void;
+        itemSheetReplaceContent?: (app:any, html:any, element:any) => void;
     }
 
     interface BeaverSystem extends SystemApi {
@@ -38,20 +38,19 @@ declare global {
         register: (implementation: SystemApi) => void;
         currenciesToLowestValue: (currencies: Currencies) => number;
         currencyToCurrencies: (lowestValue: number) => Currencies;
-        actorCurrenciesGet: (actor) => Currencies;
-        actorCurrenciesAdd: (actor, currencies: Currencies) => Promise<void>; //may throw Error
-        actorCurrenciesCanAdd: (actor, currencies: Currencies) => boolean;
-        actorComponentListAdd: (actor, componentList: Component[]) => Promise<ItemChange>,
-        uuidToDocument: (string) => Promise<foundry.abstract.Document<any, any>>
-        componentCreate: (data) => Component
+        actorCurrenciesGet: (actor:Actor) => Currencies;
+        actorCurrenciesAdd: (actor:Actor, currencies: Currencies) => Promise<void>; //may throw Error
+        actorCurrenciesCanAdd: (actor:Actor, currencies: Currencies) => boolean;
+        actorComponentListAdd: (actor:Actor, componentList: Component[]) => Promise<ItemChange>,
+        uuidToDocument: (arg0:string) => Promise<foundry.abstract.Document<any, any>>
+        componentCreate: (data:any) => Component
         componentDefaultData: ComponentData,
-        componentFromEntity: (entity, hasJsonData?: boolean) => Component,
+        componentFromEntity: (entity:any, hasJsonData?: boolean) => Component,
         componentIsSame: (a: ComponentData, b: ComponentData) => boolean,
         currenciesSum: (source: Currencies, add: Currencies, doExchange: boolean) => Currencies
         objectAttributeGet: (obj: any, attribute: string, fallback?: any) => any,
-        objectAttributeSet: (obj: any, attribute: string, value) => void,
-        itemListComponentFind: (itemList, component: ComponentData) => { components: Component[], quantity: number },
-        tokenMovementCreate: (actorId: string) => TokenMovementInstance,
+        objectAttributeSet: (obj: any, attribute: string, value:any) => void,
+        itemListComponentFind: (itemList:any, component: ComponentData) => { components: Component[], quantity: number },
         uiDialogSelect: (data: SelectData) => Promise<string>
     }
 

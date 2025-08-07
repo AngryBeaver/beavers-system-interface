@@ -1,12 +1,18 @@
 {
 	"name": "beavers-system-interface",
 	"title": "Beaver's System Interface",
-	"version": "2.3.0",
+	"version": "2.3.1",
 	"description": "Beaver's System Interface",
 	"#devDir": "c:\\vtts\\v13.342\\Data\\modules",
 	"devDir": "c:\\vtts\\v12.331\\Data\\modules",
 	"#devDir": "c:\\vtts\\v11.315\\Data\\modules",
 	"main": "src/main.js",
+	"types": "./src/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./src/index.d.ts"
+		}
+	},
 	"scripts": {
 		"type": "npx -p typescript tsc src/types.ts --declaration --emitDeclarationOnly --outDir dist/src",
 		"build": "npx gulp",
@@ -28,8 +34,7 @@
 	},
 	"devDependencies": {
 		"beavers-gamepad": "^2.0.0",
-		"@ethaks/fvtt-quench": "^0.6.0",
-		"@league-of-foundry-developers/foundry-vtt-types": "^12.331.3-beta",
+		"@league-of-foundry-developers/foundry-vtt-types": "^13.346.0-beta",
 		"@types/jest": "^27.4.1",
 		"del": "^6.0.0",
 		"gulp": "^4.0.2",

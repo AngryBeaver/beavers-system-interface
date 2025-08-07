@@ -15,14 +15,13 @@
     "strictNullChecks": false,
     "noImplicitThis": false,
     "noImplicitReturns": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "typeRoots" : [
       "./node_modules/@types",
       "./src/types",
       "./node_modules"
     ],
     "types": [
-      "@ethaks/fvtt-quench",
       "beavers-gamepad/src",
       "@league-of-foundry-developers/foundry-vtt-types"
     ],
@@ -32,8 +31,8 @@
     "esModuleInterop": true
   },
   "include": [
-    "./src/**.*.ts",
-    "./src/**.*.js"
+    "./src/**/*.ts",
+    "./src/**/*.js"
   ],
   "exclude": [
     "./templates/**/*"

@@ -14,8 +14,8 @@ class IncrementStep implements TestClass<"name"> {
     readonly informationField:InfoField = {
         name: "type",
         type: "info",
-        label: game['i18n'].localize("beaversSystemInterface.tests.incrementStep.info.label"),
-        note: game['i18n'].localize("beaversSystemInterface.tests.incrementStep.info.note")
+        label: (game as foundry.Game)['i18n'].localize("beaversSystemInterface.tests.incrementStep.info.label"),
+        note: (game as foundry.Game)['i18n'].localize("beaversSystemInterface.tests.incrementStep.info.note")
     }
 
     readonly customizationFields: Record<"name",InputField> = {

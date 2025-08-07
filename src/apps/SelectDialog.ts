@@ -1,6 +1,7 @@
 import {Settings} from "../Settings.js";
+import {AppClass} from "../legacySupport.js";
 
-export class SelectDialog extends Application {
+export class SelectDialog extends AppClass {
     selectData: SelectData
     callback;
     selected: string;
@@ -23,15 +24,16 @@ export class SelectDialog extends Application {
         });
     }
 
-    constructor(data: SelectData , callback: (id: string | PromiseLike<string>) => void, options?: Partial<ApplicationOptions>) {
+    constructor(data: SelectData , callback: (id: string | PromiseLike<string>) => void, options?: any) {
         super(options);
         this.selectData = data;
         this.callback = callback;
     }
 
     static get defaultOptions() {
+        // @ts-ignore
         return foundry.utils.mergeObject(super.defaultOptions, {
-            title: game["i18n"].localize(`beaversSystemInterface.select-dialog.title`),
+            title: (game as foundry.Game)["i18n"].localize(`beaversSystemInterface.select-dialog.title`),
             width: 300,
             height: 80,
             template: "modules/beavers-system-interface/templates/selectDialog.hbs",
@@ -42,7 +44,9 @@ export class SelectDialog extends Application {
     }
 
     getData() {
-        return foundry.utils.mergeObject(this.selectData,{size:"l",enabled:Settings.get(Settings.ENABLE_SELECTION)});
+        // @ts-ignore
+        return foundry.utils.mergeObject(
+            this.selectData,{size:"l",enabled:Settings.get(Settings.ENABLE_SELECTION)});
     }
 
     activateListeners(html: JQuery) {
