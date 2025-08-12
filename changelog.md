@@ -1,3 +1,6 @@
+## 2.3.1
+- upgrade typescript
+- seperate branch for foundry v11 support.
 ## 2.3.0
 - add color theme
 ## 2.2.5
