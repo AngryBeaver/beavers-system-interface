@@ -1,3 +1,11 @@
+## 2.3.2
+- fix input field note class.
+- branch v13+
+## 2.3.1
+- branch v11-v13
+- update typescript 2.3.1
+- remove TokenMovement
+- remove inner dependency to gamepad module.
 ## 2.3.0
 - add color theme
 ## 2.2.5
