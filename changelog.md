@@ -1,3 +1,5 @@
+## 2.3.3
+- add Selector for actorTabs
 ## 2.3.2
 - fix input field note class.
 - branch v13+

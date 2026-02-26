@@ -14,6 +14,7 @@ declare global {
         actorCurrenciesAdd?: (actor:Actor, currencies: Currencies) => Promise<void>; //deprecated
         actorCurrenciesGet?: (actor:Actor) => Currencies;
         actorCurrenciesStore?: (actor:Actor, currencies: Currencies) => Promise<void>;
+        actorSheetTabSelector: string;
         actorSheetAddTab: (sheet:any, html:any, actor:Actor, tabData: {
             id: string,
             label: string,
