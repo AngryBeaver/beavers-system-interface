@@ -306,7 +306,7 @@ export class CoreSystem implements BeaverSystem {
     const actorCurrencies = this.actorCurrenciesGet(actor);
     const payValue = this.currenciesToLowestValue(currencies);
     const actorValue = this.currenciesToLowestValue(actorCurrencies);
-    return 0 > actorValue + payValue;
+    return 0 <= actorValue + payValue;
   }
 
   get actorSheetTabSelector(): string {

@@ -1,3 +1,5 @@
+## 2.3.4
+- fix can add currency
 ## 2.3.3
 - add Selector for actorTabs
 ## 2.3.2
