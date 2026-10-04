@@ -1,8 +1,8 @@
 {
-  "title": "Beaver's System Interface",
-  "description": "An Interface to uniformly access system dependent implementations",
-  "id": "beavers-system-interface",
-  "version": "2.3.4",
+  "title": "{{title}}",
+  "description": "{{description}}",
+  "id": "{{name}}",
+  "version": "{{version}}",
   "authors": [
     {
       "name": "angryBeaver",
@@ -95,6 +95,6 @@
   },
   "compatibility": {
     "minimum": "11",
-    "verified": "13"
+    "verified": "14"
   }
 }

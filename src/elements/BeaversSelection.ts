@@ -1,4 +1,5 @@
 import {Settings} from "../Settings.js";
+import {getMyTemplate} from "../legacySupport.js";
 
 export class BeaversSelection extends HTMLElement {
     choices = {};
@@ -20,7 +21,7 @@ export class BeaversSelection extends HTMLElement {
             }
         });
         if(Settings.get(Settings.ENABLE_SELECTION)) {
-            getTemplate('modules/beavers-system-interface/templates/select.hbs')
+            getMyTemplate('modules/beavers-system-interface/templates/select.hbs')
                 .then(
                     template => {
                         this.render(template);
@@ -66,7 +67,7 @@ export class BeaversSelection extends HTMLElement {
     }
 
     closeDropdown() {
-        this.removeOutsideClick();
+        this.removeOutsideClick?.();
         this.dropDown.removeClass("active");
     }
 

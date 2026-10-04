@@ -1,6 +1,7 @@
+import {getMyTemplate} from "../legacySupport.js";
 
 export function registerHandleBars() {
-    getTemplate('modules/beavers-system-interface/templates/beavers-input-field.hbs').then(template => {
+    getMyTemplate('modules/beavers-system-interface/templates/beavers-input-field.hbs').then(template => {
         Handlebars.registerPartial('beavers-input-field', template);
         Handlebars.registerHelper('beavers-test', function (serializedTest: SerializedTest<any>, options: TestRenderOptions = {}) {
             const testClass = beaversSystemInterface.testClasses[serializedTest.type] as TestClass<any>;
