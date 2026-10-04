@@ -1,7 +1,7 @@
 {
 	"name": "beavers-system-interface",
 	"title": "Beaver's System Interface",
-	"version": "2.3.4",
+	"version": "2.3.5",
 	"description": "An Interface to uniformly access system dependent implementations",
 	"devDir": "c:\\vtts\\v14.368\\Data\\modules",
 	"#devDir": "c:\\vtts\\v13.351\\Data\\modules",
@@ -32,10 +32,10 @@
 		"printWidth": 120
 	},
 	"devDependencies": {
-		"beavers-gamepad": "^2.0.0",
 		"@league-of-foundry-developers/foundry-vtt-types": "^13.346.0-beta",
 		"@types/jest": "^27.4.1",
 		"archiver": "^7.0.1",
+		"beavers-gamepad": "^2.0.0",
 		"esbuild": "^0.25.1",
 		"karma-cli": "^2.0.0",
 		"prettier": "^2.7.1",
