@@ -1,0 +1,17 @@
+body {
+    --beavers-header-color:#ebf7af;
+    --beavers-color: #2b4a42;
+    --beavers-primary-color-highlight:#ebf7af;
+    --beavers-primary-bg-color:linear-gradient(to bottom, #2c584d, #a0cdbc);
+    --beavers-background-color-highlight: #2b4a42;
+    --beavers-border-color:#a0cdbc;
+    --beavers-border-color-highlight:#ebf7af;
+    --beavers-item-color: #1c302b;
+    --beavers-item-border-color:#a0cdbc;
+}
+
+
+.beavers-crafting .prosemirror{
+    --menu-background: rgba(0, 0, 0, 0.1) !important;
+
+}

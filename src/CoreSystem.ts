@@ -8,6 +8,9 @@ export class CoreSystem implements BeaverSystem {
   _configCurrencies: CurrencyConfig[];
   _extensions: { [moduleName: string]: Partial<Extension> } = {};
   _testClasses: { [name: string]: TestClass<any> } = {};
+  /** system of the built-in adaptation (src/bsa/<system>) in use, it wins over separately installed bsa modules */
+  _builtin?: string;
+  _builtinTestTypes = new Set<string>();
 
   checkValidity() {
     if (this._modules.length > 0 && this._implementation === undefined) {
@@ -30,7 +33,17 @@ export class CoreSystem implements BeaverSystem {
   }
 
   registerTestClass<T extends string>(clazz: TestClass<T>) {
+    if (this._builtinTestTypes.has(clazz.type)) {
+      console.info(`Beavers System Interface | test ${clazz.type} of a bsa module ignored, the built-in bsa-${this._builtin} provides it`);
+      return;
+    }
     this._testClasses[clazz.type] = clazz;
+  }
+
+  /** test classes of the built-in adaptation, they replace those of a separately installed bsa module */
+  registerBuiltinTestClass<T extends string>(clazz: TestClass<T>) {
+    this._testClasses[clazz.type] = clazz;
+    this._builtinTestTypes.add(clazz.type);
   }
 
   get testClasses() {
@@ -53,9 +66,18 @@ export class CoreSystem implements BeaverSystem {
   }
 
   register(implementation) {
-    if (implementation.id === (game as foundry.Game)["system"].id) {
-      this._implementation = implementation;
+    if (implementation.id !== (game as foundry.Game)["system"].id) return;
+    if (this._builtin) {
+      console.info(`Beavers System Interface | bsa module for ${implementation.id} ignored, the built-in bsa-${this._builtin} is used`);
+      return;
     }
+    this._implementation = implementation;
+  }
+
+  /** the adaptation that ships with beavers-system-interface (src/bsa/<system>) */
+  registerBuiltin(implementation) {
+    this._implementation = implementation;
+    this._builtin = implementation.id;
   }
   async init() {
     if (this._implementation?.init !== undefined) {

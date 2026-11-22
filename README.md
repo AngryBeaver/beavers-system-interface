@@ -21,6 +21,16 @@ BSI.
 
 [Supported systems](https://github.com/AngryBeaver/beavers-system-interface/wiki/BSA-x-links) 
 
+**Built-in BSA-X:** some system adapters are included in Beaver's System Interface itself, no extra module needed:
+
+| System | id | was |
+|---|---|---|
+| Fabula Ultima | `projectfu` | bsa-projectfu |
+| Stars Without Number Revised | `swnr` | bsa-swnr |
+
+A built-in adapter **wins** over a separately installed bsa-x module for the same system: that module's
+implementation and its test types are ignored (see the browser console). You can uninstall such a bsa-x module.
+
 ## Main Functionality v1
 - configurations e.g. list of skills,abilities,currencies
 - adjust Currencies
@@ -112,6 +122,16 @@ some methods have a default implementation see
 [functions](https://github.com/AngryBeaver/beavers-system-interface/wiki/Beaver's-System-Interface)
 
 Set your version to the major version of the SystemApi you implement.
+
+### Built-in adapters (src/bsa/&lt;system&gt;)
+An adapter can also live inside this module, one directory per system:
+```
+src/bsa/<system>/index.ts   exports a BuiltinBsa: { system, create(), testClasses() }
+src/bsa/<system>/*.ts       the SystemApi implementation and its test classes
+src/bsa/<system>/bsa.css    copied to bsa/<system>/bsa.css, loaded only when that system runs
+```
+and is listed in `src/bsa/index.ts`. Changelog entries for an adapter start with its system id, e.g. `- swnr: …`. It is registered before `beavers-system-interface.init` is called, so it wins over
+a bsa-x module; its test classes are registered before `beavers-system-interface.ready`, so they win too.
 
 ## Why this module
 

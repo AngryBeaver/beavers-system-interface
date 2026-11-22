@@ -1,3 +1,16 @@
+## 2.4.0
+- built-in system adapters, one directory per system in src/bsa/<system>; they win over separately installed bsa-x modules
+- only the css of the running system's built-in adapter is loaded
+- projectfu: included, was bsa-projectfu 1.2.0
+- projectfu: crafting tab opens on the ApplicationV2 actor sheet (projectfu 4.x, Foundry v13)
+- projectfu: crafted items are treasure items and stack (quantity is system.quantity.value)
+- swnr: included, was bsa-swnr 1.2.0
+- swnr: crafting tab opens on the ApplicationV2 actor sheet (swnr 2.x, Foundry v14)
+- swnr: skill checks offer the skills of every swnr skill list (classic, revised, cwn, psionic, space magic)
+- swnr: a skill the actor does not have is rolled untrained (rank -1) instead of failing
+## 2.3.5
+- build with esbuild and pnpm, release through GitHub actions
+- template loading compatible with Foundry v13+ (no deprecated getTemplate)
 ## 2.3.4
 - fix can add currency
 ## 2.3.3

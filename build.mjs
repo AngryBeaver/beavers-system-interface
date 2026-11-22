@@ -73,8 +73,23 @@ async function buildManifest(root) {
   console.log(`[manifest] -> ${root}`);
 }
 
+/** src/bsa/<system>/*.css -> <root>/bsa/<system>/ (loaded at runtime for the running system only) */
+async function copyBsaCss(root) {
+  const bsaDir = path.join(__dirname, "src", "bsa");
+  if (!fs.existsSync(bsaDir)) return;
+  for (const system of await fsp.readdir(bsaDir, { withFileTypes: true })) {
+    if (!system.isDirectory()) continue;
+    for (const file of await fsp.readdir(path.join(bsaDir, system.name))) {
+      if (!file.endsWith(".css")) continue;
+      await fsp.mkdir(path.join(root, "bsa", system.name), { recursive: true });
+      await fsp.copyFile(path.join(bsaDir, system.name, file), path.join(root, "bsa", system.name, file));
+    }
+  }
+}
+
 async function copyAssets(root) {
   await Promise.all([
+    copyBsaCss(root),
     ...ASSET_DIRS.map((d) => copyDir(path.join(__dirname, d), path.join(root, d))),
     fsp.copyFile(path.join(__dirname, "LICENSE"), path.join(root, "LICENSE")).catch(() => {}),
     fsp.copyFile(path.join(__dirname, "README.md"), path.join(root, "README.md")).catch(() => {}),

@@ -1,0 +1,44 @@
+body {
+    --beavers-primary-color: #fff;
+    --beavers-primary-color-highlight: #eee;
+    --beavers-primary-bg-color: rgba(0, 0, 0, 0.1);
+    --beavers-primary-bg-color-highlight: rgba(0, 0, 0, 0.3);
+    --beavers-secondary-color: #000;
+    --beavers-secondary-color-highlight: #444;
+
+    --beavers-color: rgb(181, 179, 164);
+    --beavers-color-highlight: var(--beavers-primary-color-highlight);
+    --beavers-border-color: #fff;
+    --beavers-border-color-highlight: var(--beavers-primary-color-highlight);
+    --beavers-header-color: var(--beavers-secondary-color);
+    --beavers-header-color-highlight: var(--beavers-secondary-color-highlight);
+    --beavers-background-color: var( --beavers-primary-bg-color);
+    --beavers-background-color-highlight: var( --beavers-primary-bg-color-highlight);
+
+    --beavers-item-color: var(--beavers-color);
+    --beavers-item-color-highlight: var(--beavers-color-highlight);
+    --beavers-item-border-color: rgb(17, 18, 31);
+    --beavers-item-border-color-highlight: var(--beavers-border-color-highlight);
+    --beavers-item-header-color: var(--beavers-header-color);
+    --beavers-item-header-color-highlight: var(--beavers-header-color-highlight);
+    --beavers-item-background-color: var(--beavers-background-color);
+    --beavers-item-background-color-highlight: var(--beavers-background-color-highlight);
+
+    --beavers-chat-color: var(--color-dark-4);
+    --beavers-chat-color-highlight: var(--color-dark-3);
+    --beavers-chat-border-color: var(--color-light-1);
+    --beavers-chat-border-color-highlight: #999;
+    --beavers-chat-header-color: var(--color-dark-2);
+    --beavers-chat-header-color-highlight: var(--color-dark-1);
+    --beavers-chat-background-color: rgba(0, 0, 0, 0.05);
+    --beavers-chat-background-color-highlight: rgba(0, 0, 0, 0.1);
+
+    --beavers-actor-color: var(--beavers-color);
+    --beavers-actor-color-highlight: var(--beavers-color-highlight);
+    --beavers-actor-border-color: rgb(17, 18, 31);
+    --beavers-actor-border-color-highlight: var(--beavers-border-color-highlight);
+    --beavers-actor-header-color: #ccc;
+    --beavers-actor-header-color-highlight: var(--beavers-header-color-highlight);
+    --beavers-actor-background-color: var(--beavers-background-color);
+    --beavers-actor-background-color-highlight: var(--beavers-background-color-highlight);
+}
