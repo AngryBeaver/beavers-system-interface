@@ -1,7 +1,7 @@
 {
 	"name": "beavers-system-interface",
 	"title": "Beaver's System Interface",
-	"version": "2.3.5",
+	"version": "2.4.0",
 	"description": "An Interface to uniformly access system dependent implementations",
 	"devDir": "c:\\vtts\\v14.368\\Data\\modules",
 	"#devDir": "c:\\vtts\\v13.351\\Data\\modules",
