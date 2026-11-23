@@ -1,3 +1,10 @@
+## 2.5.0
+- CoC7: included, Call of Cthulhu 7th Edition (CoC7 9.x, Foundry v13 and v14)
+- CoC7: skill, characteristic/luck and sanity checks, rolled with CoC7's own roll dialog and chat card; the recipe sets the required success (regular, hard, extreme)
+- CoC7: "max successes" per check (default 1): above 1 every success level beyond the required one counts as another success
+- CoC7: a sanity check takes the sanity loss for success/failure (number or dice) through CoC7
+- CoC7: no currencies, CoC7 has no coins (prices are text per era)
+- check descriptions show their hint instead of the translation key
 ## 2.4.0
 - built-in system adapters, one directory per system in src/bsa/<system>; they win over separately installed bsa-x modules
 - only the css of the running system's built-in adapter is loaded

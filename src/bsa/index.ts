@@ -6,6 +6,7 @@
  * "beavers-system-interface.init" is called, and later registrations for the same system and its test types are ignored.
  * Only the adaptation of the running system is created, and only its bsa.css is loaded.
  */
+import { coc7 } from "./CoC7/index.js";
 import { projectfu } from "./projectfu/index.js";
 import { swnr } from "./swnr/index.js";
 
@@ -17,7 +18,7 @@ export interface BuiltinBsa {
   testClasses: () => TestClass<any>[];
 }
 
-const BUILTIN: BuiltinBsa[] = [projectfu, swnr];
+const BUILTIN: BuiltinBsa[] = [coc7, projectfu, swnr];
 
 export function builtinBsa(systemId: string): BuiltinBsa | undefined {
   return BUILTIN.find((b) => b.system === systemId);

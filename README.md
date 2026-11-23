@@ -25,6 +25,7 @@ BSI.
 
 | System | id | was |
 |---|---|---|
+| Call of Cthulhu 7th Edition | `CoC7` | – (built in from the start) |
 | Fabula Ultima | `projectfu` | bsa-projectfu |
 | Stars Without Number Revised | `swnr` | bsa-swnr |
 
