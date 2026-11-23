@@ -1,0 +1,14 @@
+/* Call of Cthulhu 7th Edition: crafting tab on the actor sheet */
+.bsa-coc7-tab {
+    overflow-y: auto;
+}
+
+/* investigator sheet v3: a small ribbon like "effects" and "keeper notes".
+   CoC7's ribbon variables hold urls relative to its own css, so the image is referenced here directly
+   (this file is modules/beavers-system-interface/bsa/CoC7/bsa.css). */
+.application nav.tabs a.tab.small-ribbon.bsa-coc7-crafting {
+    --tab-color: var(--color-mp);
+}
+.application nav.tabs a.tab.small-ribbon.bsa-coc7-crafting::after {
+    background-image: url("../../../../systems/CoC7/assets/images/sheet-v3/ribbon-blue.webp");
+}
